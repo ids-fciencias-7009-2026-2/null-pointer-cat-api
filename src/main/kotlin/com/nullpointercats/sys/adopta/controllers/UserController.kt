@@ -23,6 +23,24 @@ import java.time.LocalDateTime
 class UsuarioController {
     val logger: Logger = LoggerFactory.getLogger(UsuarioController::class.java)
 
+
+    @GetMapping("/me")
+    fun retrieveUser(): ResponseEntity<User>{
+        val fakeUser = User(
+            "x-id",
+            "x-username",
+            "x-email@gmail.com",
+            "test123",
+            "x-fname",
+            "x-lname",
+            0
+
+        )
+
+        logger.info("User found in system: $fakeUser")
+        return ResponseEntity.ok(fakeUser)
+    }
+
     /**
      * Endpoint for registering a new user
      *
