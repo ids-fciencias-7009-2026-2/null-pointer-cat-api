@@ -20,10 +20,22 @@ import java.time.LocalDateTime
 
 @RestController
 @RequestMapping("/users") // Base prefix
-class UsuarioController {
+class UserController {
     val logger: Logger = LoggerFactory.getLogger(UsuarioController::class.java)
 
 
+    /**
+     * Endpoint for retrieving the current user's information.
+     *
+     * URL: http://localhost:8080/users/me
+     * Method: GET
+     *
+     * This endpoint simulates retrieving the authenticated user
+     * from the system using fake data.
+     *
+     * @return ResponseEntity containing the user information
+     *         and HTTP 200 (OK).
+     */
     @GetMapping("/me")
     fun retrieveUser(): ResponseEntity<User>{
         val fakeUser = User(
@@ -47,7 +59,7 @@ class UsuarioController {
      * URL:    http://localhost:8080/users/register
      * Method: POST
      *
-     * @param createUserRequest DTO that represents the body of the request.
+     * @param registerUserRequest DTO that represents the body of the request.
      * @return ResponseEntity with the created user and the code HTTP 200 (OK).
      */
     @PostMapping("/register")
