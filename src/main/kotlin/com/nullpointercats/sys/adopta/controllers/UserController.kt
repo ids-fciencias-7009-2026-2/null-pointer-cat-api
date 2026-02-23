@@ -27,7 +27,7 @@ class UsuarioController {
      * Endpoint for registering a new user
      *
      * URL:    http://localhost:8080/users/register
-     * Metodo: POST
+     * Method: POST
      *
      * @param createUserRequest DTO that represents the body of the request.
      * @return ResponseEntity with the created user and the code HTTP 200 (OK).
@@ -44,6 +44,17 @@ class UsuarioController {
         return ResponseEntity.ok(userToAdd)
     }
 }
+
+    /**
+     * Endpoint for authenticating a user.
+     *
+     * URL:    http://localhost:8080/users/login
+     * Method: POST
+     * @param loginRequest DTO that represents the body of the request containing the user credentials.
+     * @return ResponseEntity with:
+     *          - HTTP 200(OK) if the login is successful.
+     *          - HTTP 401(Unauthorized) if the credentials are invalid.
+     */
 
     @PostMapping("/login")
     fun login(
