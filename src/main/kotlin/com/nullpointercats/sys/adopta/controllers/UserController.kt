@@ -5,7 +5,6 @@ import com.nullpointercats.sys.adopta.domain.toUser
 import com.nullpointercats.sys.adopta.dto.request.LoginRequest
 import com.nullpointercats.sys.adopta.dto.response.LogoutResponse
 import com.nullpointercats.sys.adopta.dto.request.RegisterRequest
-import com.nullpointercats.sys.adopta.dto.response.RegisterResponse
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.http.ResponseEntity
@@ -115,6 +114,38 @@ class UserController {
             ResponseEntity.status(401).build()
         }
 
+    }
+
+    /**
+     * Endpoint for user logout.
+     *
+     * URL:    http://localhost:8080/users/logout
+     * Metodo: POST
+     *
+     * @return ResponseEntity with logout information (user id and logout time)
+     */
+    @PostMapping("/logout")
+    fun logout(): ResponseEntity<Any> {
+
+        val fakeUser = User(
+            "x-id",
+            "x-username",
+            "x-email@gmail.com",
+            "test123",
+            "x-fname",
+            "x-lname",
+            0
+
+        )
+
+        val logoutResponse = LogoutResponse(
+            fakeUser.id,
+            LocalDateTime.now().toString()
+        )
+
+        logger.info("Logout successful! Hope to see you soon! ")
+
+        return ResponseEntity.ok(logoutResponse)
     }
 
 }
