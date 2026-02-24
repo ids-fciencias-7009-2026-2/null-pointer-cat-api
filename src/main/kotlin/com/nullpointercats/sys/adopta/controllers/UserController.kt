@@ -21,7 +21,7 @@ import java.time.LocalDateTime
 @RestController
 @RequestMapping("/users") // Base prefix
 class UserController {
-    val logger: Logger = LoggerFactory.getLogger(UsuarioController::class.java)
+    val logger: Logger = LoggerFactory.getLogger(UserController::class.java)
 
 
     /**
@@ -37,7 +37,7 @@ class UserController {
      *         and HTTP 200 (OK).
      */
     @GetMapping("/me")
-    fun retrieveUser(): ResponseEntity<User>{
+    fun retrieveUser(): ResponseEntity<User> {
         val fakeUser = User(
             "x-id",
             "x-username",
@@ -73,7 +73,7 @@ class UserController {
 
         return ResponseEntity.ok(userToAdd)
     }
-}
+
 
     /**
      * Endpoint for authenticating a user.
@@ -89,7 +89,7 @@ class UserController {
     @PostMapping("/login")
     fun login(
         @RequestBody loginRequest: LoginRequest
-    ): ResponseEntity<Any>{
+    ): ResponseEntity<Any> {
         val fakeUser = User(
             "x-id",
             "x-name",
@@ -102,7 +102,8 @@ class UserController {
 
         logger.info("Try to make login with:$loginRequest")
 
-        return if (fakeUser.password==loginRequest.password){
+
+        return if (fakeUser.password == loginRequest.password) {
             logger.info("Login successful")
 
             ResponseEntity.ok(
@@ -116,3 +117,4 @@ class UserController {
 
     }
 
+}
