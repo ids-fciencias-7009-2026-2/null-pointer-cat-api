@@ -78,7 +78,8 @@ class UserController {
         )
         logger.info("Try to make login with: $loginRequest")
 
-        return if (fakeUser.password == loginRequest.password) {
+        return if (fakeUser.email == loginRequest.password &&
+            fakeUser.password == loginRequest.password) {
             logger.info("Login successful")
             ResponseEntity.ok(mapOf("message" to "Login successful"))
         } else {
