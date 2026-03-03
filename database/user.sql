@@ -17,8 +17,8 @@ CREATE TABLE AdoptionUser (
 
 -- Primary Key and Constraints
 ALTER TABLE AdoptionUser ADD CONSTRAINT pk_IdUser PRIMARY KEY (IdUser);
-ALTER TABLE AdoptionUser ADD CONSTRAINT CK_Zipcode CHECK (Zipcode BETWEEN 5 AND 10);
-ALTER TABLE AdoptionUser ADD CONSTRAINT CK_Gender CHECK (Sexo IN ('M', 'F', 'Other'));
+ALTER TABLE AdoptionUser ADD CONSTRAINT CK_Zipcode CHECK (LENGTH (Zipcode) BETWEEN 5 AND 10);
+ALTER TABLE AdoptionUser ADD CONSTRAINT CK_Gender CHECK (Gender IN ('M', 'F', 'Other'));
 ALTER TABLE AdoptionUser ADD CONSTRAINT CK_BirthDate CHECK (BirthDate <= CURRENT_DATE);
 ALTER TABLE AdoptionUser ADD CONSTRAINT CK_MaxAge CHECK (BirthDate >= CURRENT_DATE - INTERVAL '120 years');
 ALTER TABLE AdoptionUser ADD CONSTRAINT CK_FirstName CHECK (FirstName <> '');
@@ -59,7 +59,7 @@ COMMENT ON COLUMN AdoptionUser.UserPassword IS 'Encrypted hash of the user''s lo
 
 -- Constraints Comments
 COMMENT ON CONSTRAINT pk_IdUser ON AdoptionUser IS 'Primary key identifying each unique user in the adoption system.';
-COMMENT ON CONSTRAINT CK_Zipcode_Range ON AdoptionUser IS 'Ensures the Zipcode is within a valid numeric range.';
+COMMENT ON CONSTRAINT CK_Zipcode ON AdoptionUser IS 'Ensures the Zipcode is within a valid numeric range.';
 COMMENT ON CONSTRAINT CK_Gender ON AdoptionUser IS 'Restricts gender values to M, F, or Other.';
 COMMENT ON CONSTRAINT CK_BirthDate ON AdoptionUser IS 'Validates that the birth date is not set in the future.';
 COMMENT ON CONSTRAINT CK_MaxAge ON AdoptionUser IS 'Enforces a logical age limit (maximum 120 years).';
