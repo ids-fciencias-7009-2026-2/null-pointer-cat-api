@@ -1,4 +1,4 @@
--- ==============
+ser-- ==============
 --  AdoptionUser
 -- ==============
 
@@ -17,7 +17,7 @@ CREATE TABLE AdoptionUser (
 
 -- Primary Key and Constraints
 ALTER TABLE AdoptionUser ADD CONSTRAINT pk_IdUser PRIMARY KEY (IdUser);
-ALTER TABLE AdoptionUser ADD CONSTRAINT CK_Zipcode CHECK (LENGTH (Zipcode) BETWEEN 5 AND 10);
+ALTER TABLE AdoptionUser ADD CONSTRAINT CK_Zipcode CHECK (LENGTH(Zipcode) BETWEEN 5 AND 10);
 ALTER TABLE AdoptionUser ADD CONSTRAINT CK_Gender CHECK (Gender IN ('M', 'F', 'Other'));
 ALTER TABLE AdoptionUser ADD CONSTRAINT CK_BirthDate CHECK (BirthDate <= CURRENT_DATE);
 ALTER TABLE AdoptionUser ADD CONSTRAINT CK_MaxAge CHECK (BirthDate >= CURRENT_DATE - INTERVAL '120 years');
