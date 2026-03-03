@@ -3,20 +3,20 @@
 -- ==============
 
 CREATE TABLE AdoptionUser (
-    IdAdoptionUser INTEGER,
+    IdUser INTEGER,
     FirstName VARCHAR(20),
     LastName VARCHAR(50),
-    DateOfBirth DATE,
+    BirthDate DATE,
     Gender VARCHAR(10),
     Email VARCHAR(256),
     Zipcode VARCHAR(10),
     RegisterDate TIMESTAMP,
-    AdoptionUserPassword VARCHAR(128),
+    UserPassword VARCHAR(128),
     Token VARCHAR(256) -- Create separate table?
 );
 
 -- Primary Key and Constraints
-ALTER TABLE AdoptionUser ADD CONSTRAINT pk_AdoptionUser PRIMARY KEY (IdAdoptionUser);
+ALTER TABLE AdoptionUser ADD CONSTRAINT pk_IdUser PRIMARY KEY (IdUser);
 ALTER TABLE AdoptionUser ADD CONSTRAINT CK_Zipcode CHECK (Zipcode BETWEEN 5 AND 10);
 ALTER TABLE AdoptionUser ADD CONSTRAINT CK_Gender CHECK (Sexo IN ('M', 'F', 'Other'));
 ALTER TABLE AdoptionUser ADD CONSTRAINT CK_BirthDate CHECK (BirthDate <= CURRENT_DATE);
@@ -27,21 +27,21 @@ ALTER TABLE AdoptionUser ADD CONSTRAINT CK_LastName CHECK (LastName <> '');
 -- Not Null Constraints
 ALTER TABLE AdoptionUser ALTER COLUMN FirstName SET NOT NULL;
 ALTER TABLE AdoptionUser ALTER COLUMN LastName SET NOT NULL;
-ALTER TABLE AdoptionUser ALTER COLUMN DateOfBirth SET NOT NULL;
+ALTER TABLE AdoptionUser ALTER COLUMN BirthDate SET NOT NULL;
 ALTER TABLE AdoptionUser ALTER COLUMN Gender SET NOT NULL;
 ALTER TABLE AdoptionUser ALTER COLUMN Email SET NOT NULL;
 ALTER TABLE AdoptionUser ALTER COLUMN Zipcode SET NOT NULL;
 ALTER TABLE AdoptionUser ALTER COLUMN RegisterDate SET NOT NULL;
-ALTER TABLE AdoptionUser ALTER COLUMN AdoptionUserPassword SET NOT NULL;
+ALTER TABLE AdoptionUser ALTER COLUMN UserPassword SET NOT NULL;
 
 -- Sequence Setup
-CREATE SEQUENCE seq_AdoptionUser
+CREATE SEQUENCE seq_IdUser
     START 1
     INCREMENT 1
-    OWNED BY AdoptionUser.IdAdoptionUser;
+    OWNED BY AdoptionUser.IdUser;
 
 ALTER TABLE AdoptionUser
-ALTER COLUMN IdAdoptionUser SET DEFAULT nextval('seq_AdoptionUser');
+ALTER COLUMN IdUser SET DEFAULT nextval('seq_IdUser');
 
 -- DOCUMENTATION OF AdoptaUser
 COMMENT ON TABLE AdoptionUser IS 'Table storing personal data for individuals registered in the adoption system.';
@@ -58,7 +58,7 @@ COMMENT ON COLUMN AdoptionUser.RegisterDate IS 'Timestamp recording when the use
 COMMENT ON COLUMN AdoptionUser.UserPassword IS 'Encrypted hash of the user''s login password.';
 
 -- Constraints Comments
-COMMENT ON CONSTRAINT pk_AdoptionUser ON AdoptionUser IS 'Primary key identifying each unique user in the adoption system.';
+COMMENT ON CONSTRAINT pk_IdUser ON AdoptionUser IS 'Primary key identifying each unique user in the adoption system.';
 COMMENT ON CONSTRAINT CK_Zipcode_Range ON AdoptionUser IS 'Ensures the Zipcode is within a valid numeric range.';
 COMMENT ON CONSTRAINT CK_Gender ON AdoptionUser IS 'Restricts gender values to M, F, or Other.';
 COMMENT ON CONSTRAINT CK_BirthDate ON AdoptionUser IS 'Validates that the birth date is not set in the future.';
@@ -67,7 +67,7 @@ COMMENT ON CONSTRAINT CK_FirstName ON AdoptionUser IS 'Ensures the first name is
 COMMENT ON CONSTRAINT CK_LastName ON AdoptionUser IS 'Ensures the last name is not left as an empty string.';
 
 -- Sequence Comment
-COMMENT ON SEQUENCE seq_AdoptionUser IS 'Sequence for generating auto-incrementing IDs for the AdoptionUser table.';
+COMMENT ON SEQUENCE seq_IdUser IS 'Sequence for generating auto-incrementing IDs for the AdoptionUser table.';
 
 
 -- ==============
@@ -79,7 +79,7 @@ CREATE TABLE UserPhone (
     IdUser INT,
     PhoneNumber VARCHAR(20),
     PhoneType VARCHAR(20),
-    IsPrimary BOOLEAN,
+    IsPrimary BOOLEAN
 );
 
 -- Primary Key
