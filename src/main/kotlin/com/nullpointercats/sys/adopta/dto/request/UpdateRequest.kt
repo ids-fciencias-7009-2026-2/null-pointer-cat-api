@@ -24,5 +24,5 @@ data class UpdateRequest(
     /**
      * New postal code representing the user's location.
      */
-    val zipCode: Int
+    val zipCode: String
 )

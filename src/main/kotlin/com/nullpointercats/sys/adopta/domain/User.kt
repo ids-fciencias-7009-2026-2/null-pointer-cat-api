@@ -39,5 +39,5 @@ data class User(
     /**
     * Postal code representing the user's location.
     * */
-    var zipCode   : Int
+    var zipCode   : String
 )

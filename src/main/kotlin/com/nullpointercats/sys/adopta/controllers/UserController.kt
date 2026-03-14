@@ -36,7 +36,7 @@ class UserController {
             "test123",
             "x-fname",
             "x-lname",
-            0
+            "0"
         )
         logger.info("User found in system: $fakeUser")
         return ResponseEntity.ok(fakeUser)
@@ -74,7 +74,7 @@ class UserController {
             "test123",
             "x-fname",
             "x-lname",
-            0
+            "0"
         )
         logger.info("Try to make login with: $loginRequest")
 
@@ -103,7 +103,7 @@ class UserController {
             "test123",
             "x-fname",
             "x-lname",
-            0
+            "0"
         )
         val logoutResponse = LogoutResponse(
             fakeUser.id,
@@ -134,7 +134,7 @@ class UserController {
             password  = "test123",
             firstName = "x-fname",
             lastName  = "x-lname",
-            zipCode   = 0
+            zipCode   = "0"
         )
 
         // Apply the updates

@@ -35,5 +35,5 @@ data class RegisterRequest(
     /**
      * Postal code representing the user's location.
      */
-    val zipCode: Int
+    val zipCode: String
 )
