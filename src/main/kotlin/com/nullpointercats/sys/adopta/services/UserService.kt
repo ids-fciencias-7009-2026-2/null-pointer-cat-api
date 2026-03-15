@@ -8,6 +8,9 @@ import com.nullpointercats.sys.adopta.repositories.toUserEntity
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
+import java.security.MessageDigest
+import java.util.UUID
+
 
 @Service
 class UserService {
@@ -38,23 +41,29 @@ class UserService {
     */
 
     fun login(email: String, password: String): String {
-
-    val user = userRepository.findByEmail(email)
+        
+        val user = userRepository.findByEmail(email)
         ?: throw RuntimeException("User not found")
+        
+        val hashedPassword = hashPassword(password)
 
-    val hashedPassword = hash(password)
-
-    if (user.password != hashedPassword) {
-        throw RuntimeException("Invalid credentials")
+        if (user.password != hashedPassword) {
+            throw RuntimeException("Invalid credentials")
+        }
+        
+        val token = UUID.randomUUID().toString()
+        user.token = token
+        userRepository.save(user)
+        
+        return token
     }
-
-    val token = UUID.randomUUID().toString()
-
-    user.token = token
-    userRepository.save(user)
-
-    return token
-}
-
+    
+    fun hashPassword(password: String): String {
+        val bytes = MessageDigest
+        .getInstance("SHA-256")
+        .digest(password.toByteArray())
+        
+        return bytes.joinToString("") { "%02x".format(it) }
+    }
 
 }
