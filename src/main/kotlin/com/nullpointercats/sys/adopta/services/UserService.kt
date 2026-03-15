@@ -24,5 +24,24 @@ class UserService {
         return user
     }
 
+    fun login(email: String, password: String): String {
+
+    val user = userRepository.findByEmail(email)
+        ?: throw RuntimeException("User not found")
+
+    val hashedPassword = hash(password)
+
+    if (user.password != hashedPassword) {
+        throw RuntimeException("Invalid credentials")
+    }
+
+    val token = UUID.randomUUID().toString()
+
+    user.token = token
+    userRepository.save(user)
+
+    return token
+}
+
 
 }
