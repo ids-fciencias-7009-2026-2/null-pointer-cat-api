@@ -24,6 +24,19 @@ class UserService {
         return user
     }
 
+    /**
+     * Authenticates a user using their email and password.
+     * If the authentication is successful, the generated token is
+     * returned to the caller so it can be sent back to the client.
+     *
+     * @param email The email address used to identify the user.
+     * @param password The plaintext password provided by the client.
+     * 
+     * @return A unique session token associated with the authenticated user.
+     * 
+     *  @throws RuntimeException If the user does not exist or the credentials are invalid.
+    */
+
     fun login(email: String, password: String): String {
 
     val user = userRepository.findByEmail(email)
