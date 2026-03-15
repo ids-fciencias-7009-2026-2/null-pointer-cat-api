@@ -9,6 +9,10 @@ import jakarta.persistence.Table
 import java.time.LocalDateTime
 import java.time.LocalDate
 
+/**
+ * UserEntity is a persistence entity that represents a user un the system.
+ * This class maps to the apoption_user table and stores personal information.
+ * */
 @Entity
 @Table(name = "adoption_user")
 class UserEntity(
@@ -39,9 +43,11 @@ class UserEntity(
     @Column(name = "register_date")
     var registerDate: LocalDateTime = LocalDateTime.now(),
 
+    /** Hashed password.*/
     @Column(name = "user_password")
     var password: String,
 
+    /** Authetification token. Optional*/
     @Column(name = "token")
     var token: String? = null
 )
