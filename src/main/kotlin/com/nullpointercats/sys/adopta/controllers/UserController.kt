@@ -2,15 +2,20 @@ package com.nullpointercats.sys.adopta.controllers
 
 import com.nullpointercats.sys.adopta.domain.User
 import com.nullpointercats.sys.adopta.domain.toUser
+
 import com.nullpointercats.sys.adopta.dto.request.LoginRequest
 import com.nullpointercats.sys.adopta.dto.request.RegisterRequest
 import com.nullpointercats.sys.adopta.dto.request.UpdateRequest
 import com.nullpointercats.sys.adopta.dto.response.LogoutResponse
+import com.nullpointercats.sys.adopta.services.UserService
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
+import java.security.MessageDigest
 import java.time.LocalDateTime
+import java.util.UUID
 
 /**
  * Controller for exposing the REST endpoints related to the
@@ -20,6 +25,10 @@ import java.time.LocalDateTime
 @RequestMapping("/users")
 class UserController {
     val logger: Logger = LoggerFactory.getLogger(UserController::class.java)
+
+    @Autowired
+    lateinit var userService: UserService
+    val activeTokens = mutableSetOf<String>()
 
     /**
      * Endpoint for retrieving the current user's information.
@@ -53,6 +62,9 @@ class UserController {
         @RequestBody registerUserRequest: RegisterRequest
     ): ResponseEntity<User> {
         val userToAdd = registerUserRequest.toUser()
+        val password = hashPassword(registerUserRequest.password)
+        userToAdd.password = password
+        userService.addNewUser(userToAdd)
         logger.info("User to add: $userToAdd")
         return ResponseEntity.ok(userToAdd)
     }
@@ -132,20 +144,32 @@ class UserController {
             username  = "x-username",
             email     = "x-email@gmail.com",
             password  = "test123",
-            firstName = "x-fname",
-            lastName  = "x-lname",
-            zipCode   = "0"
+            firstname = "x-fname",
+            lastname  = "x-lname",
+            zipcode   = "0"
         )
 
         // Apply the updates
         val updatedUser = existingUser.copy(
             username  = updateRequest.username,
-            firstName = updateRequest.firstName,
-            lastName  = updateRequest.lastName,
-            zipCode   = updateRequest.zipCode
+            firstname = updateRequest.firstname,
+            lastname  = updateRequest.lastname,
+            zipcode   = updateRequest.zipcode
         )
 
         logger.info("User updated: $updatedUser")
         return ResponseEntity.ok(updatedUser)
+    }
+
+    fun hashPassword(password: String): String {
+        val bytes = MessageDigest
+            .getInstance("SHA-256")
+            .digest(password.toByteArray())
+        return bytes.joinToString("") { "%02x".format(it) }
+    }
+
+    fun tokenGenerator(): String {
+        val token = UUID.randomUUID().toString()
+        return token
     }
 }

@@ -24,20 +24,22 @@ data class User(
     /**
     * Password of the user. Must be encrypted.
     * */
-    var password  : String,
+    var password: String? = null,
 
     /**
     * Given name of the user.
     * */
-    var firstName : String,
+    var firstname : String,
 
     /**
     * Family name of the user.
     * */
-    var lastName  : String,
+    var lastname  : String,
 
     /**
     * Postal code representing the user's location.
     * */
-    var zipCode   : String
+    var zipcode   : String,
+
+    var token: String? = null,
 )

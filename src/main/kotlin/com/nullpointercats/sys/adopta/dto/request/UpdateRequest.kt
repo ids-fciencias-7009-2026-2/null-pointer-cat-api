@@ -14,15 +14,15 @@ data class UpdateRequest(
     /**
      * New given name of the user.
      */
-    val firstName: String,
+    val firstname: String,
 
     /**
      * New family name of the user.
      */
-    val lastName: String,
+    val lastname: String,
 
     /**
      * New postal code representing the user's location.
      */
-    val zipCode: String
+    val zipcode: String
 )

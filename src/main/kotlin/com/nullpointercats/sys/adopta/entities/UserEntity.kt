@@ -10,7 +10,7 @@ import java.time.LocalDateTime
 import java.time.LocalDate
 
 @Entity
-@Table(name = "AdoptionUser")
+@Table(name = "\"AdoptionUser\"")
 class UserEntity (
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -18,30 +18,30 @@ class UserEntity (
     val id: Int? = null,
 
     @Column(name = "FirstName")
-    var firstName : String,
+    var firstname : String,
 
     @Column(name = "LastName")
-    var lastName : String,
+    var lastname : String,
 
     @Column(name = "BirthDate")
-    var birthDate : LocalDate,
+    var birthdate : LocalDate,
 
     @Column(name = "Gender")
     var gender : String,
 
-    @Column(name = "Email")
+    @Column(name = "email")
     var email : String,
 
-    @Column(name = "Zipcode")
+    @Column(name = "zipcode")
     var zipcode : String,
 
-    @Column(name = "RegisterDate")
+    @Column(name = "registerDate")
     var registerDate: LocalDateTime = LocalDateTime.now(),
 
     @Column(name = "UserPassword")
     var password: String,
 
-    @Column(name = "Token")
+    @Column(name = "token")
     var token: String? = null,
 
 

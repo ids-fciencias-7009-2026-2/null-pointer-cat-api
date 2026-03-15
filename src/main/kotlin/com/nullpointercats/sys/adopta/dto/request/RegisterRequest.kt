@@ -25,15 +25,15 @@ data class RegisterRequest(
     /**
      * Given name of the user.
      */
-    val firstName: String,
+    val firstname: String,
 
     /**
      * Family name of the user.
      */
-    val lastName: String,
+    val lastname: String,
 
     /**
      * Postal code representing the user's location.
      */
-    val zipCode: String
+    val zipcode: String
 )
