@@ -9,4 +9,6 @@ import org.springframework.data.jpa.repository.Query
 
 interface UserRepository : CrudRepository<UserEntity, Int> {
 
+fun findByEmail(email: String): UserEntity?
+
 }
