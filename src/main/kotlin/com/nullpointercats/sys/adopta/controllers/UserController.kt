@@ -4,6 +4,7 @@ import com.nullpointercats.sys.adopta.domain.User
 import com.nullpointercats.sys.adopta.domain.toUser
 
 import com.nullpointercats.sys.adopta.dto.request.LoginRequest
+import com.nullpointercats.sys.adopta.dto.response.LoginResponse
 import com.nullpointercats.sys.adopta.dto.request.RegisterRequest
 import com.nullpointercats.sys.adopta.dto.request.UpdateRequest
 import com.nullpointercats.sys.adopta.dto.response.LogoutResponse
@@ -80,7 +81,7 @@ class UserController {
         val token = userService.login(loginRequest.email, loginRequest.password)
         return ResponseEntity.ok(LoginResponse(token))
     }
-    
+
     /**
      * Endpoint for user logout.
      *
