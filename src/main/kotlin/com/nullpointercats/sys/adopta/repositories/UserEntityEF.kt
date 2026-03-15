@@ -1,17 +1,19 @@
-package com.nullpointercats.sys.adopta.entities
+package com.nullpointercats.sys.adopta.repositories
 
 import  com.nullpointercats.sys.adopta.domain.User
+import com.nullpointercats.sys.adopta.entities.UserEntity
 import java.time.LocalDate
 
 fun User.toUserEntity(): UserEntity {
     return UserEntity(
-        firstName = this.firstName,
-        lastName = this.lastName,
-        birthDate = LocalDate.now(), // Not sure about it...
-        gender =  "No idea",
+        id = null,
+        firstname = this.firstname,
+        lastname = this.lastname,
+        birthdate = LocalDate.now(), // Not sure about it...
+        gender = "No idea",
         email = this.email,
         password = this.password ?: " ",
-        zipcode = this.zipCode,
+        zipcode = this.zipcode,
         token = ""
     )
 }
