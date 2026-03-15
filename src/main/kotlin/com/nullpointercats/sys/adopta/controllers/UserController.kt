@@ -75,31 +75,12 @@ class UserController {
      * URL:    http://localhost:8080/users/login
      * Method: POST
      */
-    @PostMapping("/login")
-    fun login(
-        @RequestBody loginRequest: LoginRequest
-    ): ResponseEntity<Any> {
-        val fakeUser = User(
-            "x-id",
-            "x-name",
-            "x-email",
-            "test123",
-            "x-fname",
-            "x-lname",
-            "0"
-        )
-        logger.info("Try to make login with: $loginRequest")
-
-        return if (fakeUser.email == loginRequest.password &&
-            fakeUser.password == loginRequest.password) {
-            logger.info("Login successful")
-            ResponseEntity.ok(mapOf("message" to "Login successful"))
-        } else {
-            logger.error("Login failed")
-            ResponseEntity.status(401).build()
-        }
+     @PostMapping("/login")
+     fun login(@RequestBody loginRequest: LoginRequest): ResponseEntity<LoginResponse> {
+        val token = userService.login(loginRequest.email, loginRequest.password)
+        return ResponseEntity.ok(LoginResponse(token))
     }
-
+    
     /**
      * Endpoint for user logout.
      *
