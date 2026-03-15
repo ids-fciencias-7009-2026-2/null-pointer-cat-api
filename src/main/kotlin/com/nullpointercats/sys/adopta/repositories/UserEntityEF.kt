@@ -4,6 +4,9 @@ import  com.nullpointercats.sys.adopta.domain.User
 import com.nullpointercats.sys.adopta.entities.UserEntity
 import java.time.LocalDate
 
+/** Extension funtion to map a User domain to a UserEntity.
+ * @return UserEntity A new instance of UserEntity
+ * */
 fun User.toUserEntity(): UserEntity {
     return UserEntity(
         id = null,

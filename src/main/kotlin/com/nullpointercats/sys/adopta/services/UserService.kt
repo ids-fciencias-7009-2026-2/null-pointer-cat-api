@@ -12,6 +12,9 @@ import java.security.MessageDigest
 import java.util.UUID
 
 
+/**
+*  UserService acts as an intermediary between the controllers and the UserReposity.
+* */
 @Service
 class UserService {
     @Autowired
@@ -19,8 +22,14 @@ class UserService {
 
     val logger = LoggerFactory.getLogger(UserService::class.java)
 
+    /**
+    * Registers a new user into the system.
+    *
+    * @param user The user domain object to be registered.
+    * @return user The saved user with the password field replace by "****".
+    * */
     fun addNewUser(user: User): User {
-        val userEntity = user.toUserEntity()
+        val userEntity = user.toUserEntity() // Map domain to database entity
         userRepository.save(userEntity)
         user.password = "****"
         logger.info("User saved")
