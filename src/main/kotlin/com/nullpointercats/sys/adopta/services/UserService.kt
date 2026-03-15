@@ -61,6 +61,12 @@ class UserService {
         return userEntity?.toUser()
     }
 
+    /**
+     * Retrieves a user associated with the given authentication token.
+     *
+     * @param token The session token assigned to a logged-in user.
+     * @return The corresponding User if the token exists, otherwise null.
+    */
     fun findByToken(token: String): User? {
         val userLogged = userRepository.findByToken(token)
         logger.info("User exists: ${userLogged.toString()}")
