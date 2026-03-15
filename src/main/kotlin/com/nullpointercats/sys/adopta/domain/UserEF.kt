@@ -1,6 +1,7 @@
 package com.nullpointercats.sys.adopta.domain
 
 import com.nullpointercats.sys.adopta.dto.request.RegisterRequest
+import com.nullpointercats.sys.adopta.entities.UserEntity
 import java.util.UUID
 
 /**
@@ -14,8 +15,19 @@ fun RegisterRequest.toUser(): User {
         username = this.username,
         email = this.email,
         password = this.password,
-        firstName = this.firstName,
-        lastName = this.lastName,
-        zipCode = this.zipCode
+        firstname = this.firstname,
+        lastname = this.lastname,
+        zipcode = this.zipcode
     )
+}
+
+fun UserEntity.toUser(): User {
+    return User(
+        id = this.id.toString(),
+        username = this.firstname, // Temporalmente, será el nombre de pila
+        firstname = this.firstname,
+        lastname = this.lastname,
+        email = this.email,
+        token = this.token,
+        zipcode = this.zipcode)
 }
