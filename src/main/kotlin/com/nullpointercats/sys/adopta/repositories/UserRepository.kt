@@ -9,20 +9,17 @@ import org.springframework.data.jpa.repository.Query
 
 interface UserRepository : CrudRepository<UserEntity, Int> {
 
+    @Query("select u from UserEntity u where u.token = :token")
+    fun findByToken(token: String): UserEntity?
+    
+    @Query("select u from UserEntity u where u.email = :email and u.password = :password")
+    fun findUserByPasswordAndEmail(email: String, password: String): UserEntity?
 
- /**
-     * Retrieves a user from the database using their email address.
-     *
-     * Spring Data JPA automatically derives the SQL query from
-     * the method name. Internally, this corresponds to a query
-     * similar to:
-     *
-     * SELECT * FROM adoption_user WHERE email = ?
-     *
-     * @param email The email address used to search for the user.
-     * @return The UserEntity if a user with the given email exists,
-     *         or null if no matching user is found.
-     */
-fun findByEmail(email: String): UserEntity?
+    @Modifying
+    @Transactional
+    @Query("update UserEntity u set u.token = :token where u.id = :id")
+    fun updateTokenById(id: Int, token: String?)
+    
+    //fun findByEmail(email: String): UserEntity?
 
 }

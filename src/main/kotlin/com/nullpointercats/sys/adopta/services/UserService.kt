@@ -27,43 +27,35 @@ class UserService {
         return user
     }
 
-    /**
+    /** 
      * Authenticates a user using their email and password.
-     * If the authentication is successful, the generated token is
-     * returned to the caller so it can be sent back to the client.
+     * The credentials are validated against the data stored in the database.
+     * If a matching user is found, a new session token is generated and
+     * stored for that user.
      *
      * @param email The email address used to identify the user.
-     * @param password The plaintext password provided by the client.
-     * 
-     * @return A unique session token associated with the authenticated user.
-     * 
-     *  @throws RuntimeException If the user does not exist or the credentials are invalid.
+     * @param password The hashed password used for authentication.
+     *
+     * @return A User object containing the authenticated user's information,
+     * or null if the credentials are invalid.
     */
 
-    fun login(email: String, password: String): String {
-        
-        val user = userRepository.findByEmail(email)
-        ?: throw RuntimeException("User not found")
-        
-        val hashedPassword = hashPassword(password)
+    fun login(email: String, password: String): User? {
+        val userEntity = userRepository
+            .findUserByPasswordAndEmail(email, password)
 
-        if (user.password != hashedPassword) {
-            throw RuntimeException("Invalid credentials")
+        if (userEntity != null) {
+            val token = UUID.randomUUID().toString()
+            userEntity.token = token
+            userRepository.save(userEntity)
         }
-        
-        val token = UUID.randomUUID().toString()
-        user.token = token
-        userRepository.save(user)
-        
-        return token
+        return userEntity?.toUser()
     }
-    
-    fun hashPassword(password: String): String {
-        val bytes = MessageDigest
-        .getInstance("SHA-256")
-        .digest(password.toByteArray())
-        
-        return bytes.joinToString("") { "%02x".format(it) }
+
+    fun findByToken(token: String): User? {
+        val userLogged = userRepository.findByToken(token)
+        logger.info("User exists: ${userLogged.toString()}")
+        return userLogged?.toUser()
     }
 
 }

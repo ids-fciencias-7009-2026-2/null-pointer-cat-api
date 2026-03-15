@@ -76,11 +76,24 @@ class UserController {
      * URL:    http://localhost:8080/users/login
      * Method: POST
      */
-     @PostMapping("/login")
-     fun login(@RequestBody loginRequest: LoginRequest): ResponseEntity<LoginResponse> {
-        val token = userService.login(loginRequest.email, loginRequest.password)
-        return ResponseEntity.ok(LoginResponse(token))
-    }
+    @PostMapping("/login")
+    fun login(
+        @RequestBody loginRequest: LoginRequest
+        ): ResponseEntity<Any> {
+            
+            val passwordHash = hashPassword(loginRequest.password)
+            logger.info("password from request: $passwordHash")
+            
+            val userFound = userService.login(loginRequest.email, passwordHash)
+            logger.info("try make login with: $loginRequest")
+            logger.info("user password: ${userFound?.password}")
+            
+            return if (userFound != null) {
+                ResponseEntity.ok(LoginResponse(userFound.token.orEmpty()))
+            } else {
+                ResponseEntity.status(401).build()
+            }
+        }
 
     /**
      * Endpoint for user logout.
