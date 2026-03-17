@@ -70,7 +70,7 @@ class UserController {
         val fakeUser = User(
             "x-id",
             "x-name",
-            "x-email",
+            "nullpointercat@gmail.com",
             "test123",
             "x-fname",
             "x-lname",
@@ -78,7 +78,7 @@ class UserController {
         )
         logger.info("Try to make login with: $loginRequest")
 
-        return if (fakeUser.email == loginRequest.password &&
+        return if (fakeUser.email == loginRequest.email &&
             fakeUser.password == loginRequest.password) {
             logger.info("Login successful")
             ResponseEntity.ok(mapOf("message" to "Login successful"))
