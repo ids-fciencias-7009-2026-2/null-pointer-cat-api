@@ -44,4 +44,14 @@ interface UserRepository : CrudRepository<UserEntity, Int> {
     @Transactional
     @Query("update UserEntity u set u.token = :token where u.id = :id")
     fun updateTokenById(id: Int, token: String?)
+
+    /**
+     * Clears the session token of a specific user, logging them out.
+     *
+     * @param token The new token assigned to the user.
+     */
+    @Modifying
+    @Transactional
+    @Query("update UserEntity u set u.token = null where u.token = :token")
+    fun clearTokenByToken(token: String)
 }
