@@ -38,18 +38,17 @@ class UserController {
      * Method: GET
      */
     @GetMapping("/me")
-    fun retrieveUser(): ResponseEntity<User> {
-        val fakeUser = User(
-            "x-id",
-            "x-username",
-            "x-email@gmail.com",
-            "test123",
-            "x-fname",
-            "x-lname",
-            "0"
-        )
-        logger.info("User found in system: $fakeUser")
-        return ResponseEntity.ok(fakeUser)
+    fun retrieveUser(
+        @RequestHeader("Authorization", required = false) token: String?
+    ): ResponseEntity<User> {
+
+        logger.info("We got Token: $token")
+        val userFound = userService.findByToken(token.orEmpty())
+        if (token == null || (userFound == null)) {
+            return ResponseEntity.status(401).build()
+        }
+        logger.info("User found in service: $userFound")
+        return ResponseEntity.ok(userFound)
     }
 
     /**
