@@ -7,9 +7,9 @@ package com.nullpointercats.sys.adopta.dto.response
 
 data class LogoutResponse(
     /**
-     * Unique identifier of the user who logged out.
+     * Confirmation message of the logout operation.
      */
-    val userId: String,
+    val message: String = "Logged out successfully",
     /**
      * Date and time when the logout operation occurred.
      */
