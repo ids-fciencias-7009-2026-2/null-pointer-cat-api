@@ -73,4 +73,22 @@ class UserService {
         return userLogged?.toUser()
     }
 
+    /**
+     * Logs out a user by invalidating their session token.
+     *
+     * @param token The session token to invalidate.
+     * @return true if a user with that token was found and logged out, false otherwise.
+     */
+    fun logout(token: String): Boolean {
+        val userEntity = userRepository.findByToken(token)
+        return if (userEntity != null) {
+            userRepository.clearTokenByToken(token)
+            logger.info("User ${userEntity.email} logged out successfully")
+            true
+        } else {
+            logger.warn("Logout attempted with invalid or expired token: $token")
+            false
+        }
+    }
+
 }
