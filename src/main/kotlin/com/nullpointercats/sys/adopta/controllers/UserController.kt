@@ -102,22 +102,17 @@ class UserController {
      * Method: POST
      */
     @PostMapping("/logout")
-    fun logout(): ResponseEntity<Any> {
-        val fakeUser = User(
-            "x-id",
-            "x-username",
-            "x-email@gmail.com",
-            "test123",
-            "x-fname",
-            "x-lname",
-            "0"
-        )
-        val logoutResponse = LogoutResponse(
-            fakeUser.id,
-            LocalDateTime.now().toString()
-        )
-        logger.info("Logout successful! Hope to see you soon!")
-        return ResponseEntity.ok(logoutResponse)
+    fun logout(
+        @RequestHeader("Authorization") authHeader: String
+    ): ResponseEntity<Any> {
+        val token = authHeader.removePrefix("Bearer ").trim()
+        val success = userService.logout(token)
+        return if (success) {
+            logger.info("Logout successful!")
+            ResponseEntity.ok(LogoutResponse(logoutDateTime = LocalDateTime.now().toString()))
+        } else {
+            ResponseEntity.status(401).build()
+        }
     }
 
     /**
