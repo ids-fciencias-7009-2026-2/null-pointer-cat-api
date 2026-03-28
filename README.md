@@ -37,6 +37,35 @@ mvn spring-boot:run
 The server will start at `http://localhost:8080`
 
 ---
+## Postgres Database
+
+### Configuration
+
+1. Connect to PostgreSQL with your user:
+```bash
+   psql -U postgres
+```
+
+2. Create the databse:
+```bash
+   CREATE DATABASE adopta_db;
+```
+3. Connect to the database:
+```bash
+   \c adopta_db
+```
+
+4. Execute the schema:
+```bash
+   psql -U postgres -d adopta_db -f schema.sql
+```
+
+### To reset the database
+```bash
+psql -U postgres -c "DROP DATABASE IF EXISTS adopta_db;"
+psql -U postgres -c "CREATE DATABASE adopta_db;"
+psql -U postgres -d adopta_db -f schema.sql
+```
 
 ## Project Structure
 
