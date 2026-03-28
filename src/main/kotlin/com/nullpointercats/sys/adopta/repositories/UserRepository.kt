@@ -23,6 +23,16 @@ interface UserRepository : CrudRepository<UserEntity, Int> {
     @Query("select u from UserEntity u where u.token = :token")
     fun findByToken(token: String): UserEntity?
 
+
+    /**
+     * Finds a user by its email.
+     *
+     * @param email The user's email.
+     * @return The corresponding UserEntity, or null if no user matches the email.
+     */
+    @Query("select u from UserEntity u where u.email = :email")
+    fun findByEmail(email: String): UserEntity?
+
     /**
      * Finds a user matching the given email and password.
      * Used during the login process to validate credentials.
