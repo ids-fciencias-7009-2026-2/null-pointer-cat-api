@@ -64,9 +64,14 @@ class UserController {
         val userToAdd = registerUserRequest.toUser()
         val password = hashPassword(registerUserRequest.password)
         userToAdd.password = password
-        userService.addNewUser(userToAdd)
-        logger.info("User to add: $userToAdd")
-        return ResponseEntity.ok(userToAdd)
+
+        val userAdded = userService.addNewUser(userToAdd)
+        if(userAdded != null) {
+            logger.info("User to add: $userAdded")
+            return ResponseEntity.ok(userAdded)
+        } else{
+            return ResponseEntity.status(409).build()
+        }
     }
 
     /**

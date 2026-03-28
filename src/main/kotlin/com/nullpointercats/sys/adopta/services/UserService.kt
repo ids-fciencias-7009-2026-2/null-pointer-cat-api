@@ -27,8 +27,16 @@ class UserService {
     *
     * @param user The user domain object to be registered.
     * @return user The saved user with the password field replace by "****".
+     * or null when the email has been already registered before.
     * */
-    fun addNewUser(user: User): User {
+    fun addNewUser(user: User): User? {
+
+        val existingUser = userRepository.findByEmail(user.email)
+        if (existingUser != null) {
+            logger.warn("There is already an account with email '${user.email}'")
+            return null
+        }
+
         val userEntity = user.toUserEntity() // Map domain to database entity
         userRepository.save(userEntity)
         user.password = "****"
