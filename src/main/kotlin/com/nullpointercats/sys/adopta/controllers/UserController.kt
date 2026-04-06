@@ -41,10 +41,10 @@ class UserController {
     fun retrieveUser(
         @RequestHeader("Authorization", required = false) token: String?
     ): ResponseEntity<User> {
-
         logger.info("We got Token: $token")
         val userFound = userService.findByToken(token.orEmpty())
         if (token == null || (userFound == null)) {
+            logger.warn("User not found or no token.")
             return ResponseEntity.status(401).build()
         }
         logger.info("User found in service: $userFound")
@@ -130,29 +130,33 @@ class UserController {
      */
     @PutMapping
     fun updateUser(
+        @RequestHeader("Authorization", required = false) token: String?,
         @RequestBody updateRequest: UpdateRequest
     ): ResponseEntity<User> {
-        // Simulate fetching the existing user (fake data)
-        val existingUser = User(
-            id        = "x-id",
-            username  = "x-username",
-            email     = "x-email@gmail.com",
-            password  = "test123",
-            firstname = "x-fname",
-            lastname  = "x-lname",
-            zipcode   = "0"
-        )
+        logger.info("We got Token: $token")
+        val userFound = userService.findByToken(token.orEmpty())
 
-        // Apply the updates
-        val updatedUser = existingUser.copy(
-            username  = updateRequest.username,
-            firstname = updateRequest.firstname,
-            lastname  = updateRequest.lastname,
-            zipcode   = updateRequest.zipcode
-        )
+        if (token == null || (userFound == null)) {
+            logger.warn("User not found or no token.")
+            return ResponseEntity.status(401).build()
+        }
 
-        logger.info("User updated: $updatedUser")
-        return ResponseEntity.ok(updatedUser)
+        val updatedUser =  userFound.copy(
+            username  = updateRequest.username  ?: userFound.username,
+            firstname = updateRequest.firstname ?: userFound.firstname,
+            lastname  = updateRequest.lastname  ?: userFound.lastname,
+            zipcode   = updateRequest.zipcode   ?: userFound.zipcode
+        )
+        val savedUser = userService.updateUser(updatedUser)
+
+        if (savedUser != null) {
+            logger.info("User updated successfully: $updatedUser")
+            return ResponseEntity.ok(updatedUser)
+        }
+
+        logger.error("Error updating user.")
+        return ResponseEntity.status(500).build()
+
     }
 
     fun hashPassword(password: String): String {

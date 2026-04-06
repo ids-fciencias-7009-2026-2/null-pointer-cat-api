@@ -99,4 +99,11 @@ class UserService {
         }
     }
 
+    fun updateUser(user: User): User {
+        val userEntity = user.toUserEntity()
+        val savedUser = userRepository.save(userEntity)
+        savedUser.password = "****"
+        return savedUser.toUser()
+    }
+
 }

@@ -9,20 +9,20 @@ data class UpdateRequest(
     /**
      * New public display name of the user.
      */
-    val username: String,
+    val username: String ?,
 
     /**
      * New given name of the user.
      */
-    val firstname: String,
+    val firstname: String ?,
 
     /**
      * New family name of the user.
      */
-    val lastname: String,
+    val lastname: String ?,
 
     /**
      * New postal code representing the user's location.
      */
-    val zipcode: String
+    val zipcode: String ?
 )
