@@ -99,11 +99,23 @@ class UserService {
         }
     }
 
-    fun updateUser(user: User): User {
-        val userEntity = user.toUserEntity()
-        val savedUser = userRepository.save(userEntity)
-        savedUser.password = "****"
-        return savedUser.toUser()
+    fun updateUser(user: User): User? {
+        val userEntity = userRepository.findByEmail(user.email)
+
+        if (userEntity == null) {
+            logger.warn("Not found user with email: ${user.email}")
+            return null
+        }
+
+        userEntity.firstname = user.firstname
+        userEntity.lastname = user.lastname
+        userEntity.zipcode = user.zipcode
+
+        val savedEntity = userRepository.save(userEntity)
+        val updatedUser = savedEntity.toUser()
+        updatedUser.password = "****"
+
+        return updatedUser
     }
 
 }

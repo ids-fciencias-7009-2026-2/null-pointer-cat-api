@@ -149,11 +149,19 @@ class UserController {
         @RequestHeader("Authorization", required = false) token: String?,
         @RequestBody updateRequest: UpdateRequest
     ): ResponseEntity<User> {
-        logger.info("We got Token: $token")
-        val userFound = userService.findByToken(token.orEmpty())
 
-        if (token == null || (userFound == null)) {
-            logger.warn("User not found or no token.")
+        val cleanToken = token?.removePrefix("Bearer ")?.trim().orEmpty()
+        logger.info("[users] [ATTEMPT] Update user data. From token [${cleanToken.take(10)}]")
+
+        if(cleanToken.isEmpty()){
+            logger.warn("[update/users] [FAILED] No token given.")
+            return ResponseEntity.status(401).build()
+        }
+
+        val userFound = userService.findByToken(cleanToken)
+
+        if (userFound == null) {
+            logger.warn("[UPDATE /users] [FAILED] No user found. Token may be invalid of expired.")
             return ResponseEntity.status(401).build()
         }
 
@@ -163,15 +171,16 @@ class UserController {
             lastname  = updateRequest.lastname  ?: userFound.lastname,
             zipcode   = updateRequest.zipcode   ?: userFound.zipcode
         )
+
         val savedUser = userService.updateUser(updatedUser)
 
-        if (savedUser != null) {
-            logger.info("User updated successfully: $updatedUser")
-            return ResponseEntity.ok(updatedUser)
+        if (savedUser == null) {
+            logger.warn("[UPDATE /users] [FAILED] Failed to update user.")
+            return ResponseEntity.status(500).build()
         }
 
-        logger.error("Error updating user.")
-        return ResponseEntity.status(500).build()
+        logger.info("[UPDATE /users] [SUCCESS] User found successfully updated. ${savedUser}")
+        return ResponseEntity.ok(savedUser)
 
     }
 
