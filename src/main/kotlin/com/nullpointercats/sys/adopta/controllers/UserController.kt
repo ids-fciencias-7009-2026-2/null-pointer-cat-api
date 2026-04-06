@@ -71,17 +71,20 @@ class UserController {
     fun addUser(
         @RequestBody registerUserRequest: RegisterRequest
     ): ResponseEntity<User> {
+
+        logger.info("[users/register] [ATTEMPT] Attempting new user registration with mail ${registerUserRequest.email}")
         val userToAdd = registerUserRequest.toUser()
         val password = hashPassword(registerUserRequest.password)
         userToAdd.password = password
 
         val userAdded = userService.addNewUser(userToAdd)
-        if(userAdded != null) {
-            logger.info("User to add: $userAdded")
-            return ResponseEntity.ok(userAdded)
-        } else{
+        if(userAdded == null) {
+            logger.warn("[users/register] [FAILED] The email ${registerUserRequest.email} has been registered before.")
             return ResponseEntity.status(409).build()
         }
+
+        logger.info("[users/register] [SUCCESS] User registered successfully with email ${userAdded.email} ")
+        return ResponseEntity.ok(userAdded)
     }
 
     /**
