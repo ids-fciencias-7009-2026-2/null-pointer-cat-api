@@ -121,14 +121,18 @@ class UserController {
     fun logout(
         @RequestHeader("Authorization") authHeader: String
     ): ResponseEntity<Any> {
-        val token = authHeader.removePrefix("Bearer ").trim()
-        val success = userService.logout(token)
-        return if (success) {
-            logger.info("Logout successful!")
-            ResponseEntity.ok(LogoutResponse(logoutDateTime = LocalDateTime.now().toString()))
-        } else {
-            ResponseEntity.status(401).build()
+        val cleanToken = authHeader.removePrefix("Bearer ").trim()
+        logger.info("[users/logout] [ATTEMPT] From token [${cleanToken.take(10)}]")
+
+        val success = userService.logout(cleanToken)
+
+        if (!success) {
+            logger.warn("[users/logout] [FAILED] Invalid token or already log out.")
+            return ResponseEntity.status(401).build()
         }
+
+        logger.info("[users/logout] [SUCCESS] Successfully log out.")
+        return ResponseEntity.ok(LogoutResponse(logoutDateTime = LocalDateTime.now().toString()))
     }
 
     /**
