@@ -99,6 +99,13 @@ class UserService {
         }
     }
 
+    /**
+     * Update the information of an existing user.
+     *
+     * @param user The user domain object with the email to search and the new data to be updated.
+     * @return user The updated user with the password field replace by "****".
+     * or null when there is no user matching the provide email.
+     * */
     fun updateUser(user: User): User? {
         val userEntity = userRepository.findByEmail(user.email)
 
