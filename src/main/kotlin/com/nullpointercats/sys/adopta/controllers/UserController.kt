@@ -41,13 +41,23 @@ class UserController {
     fun retrieveUser(
         @RequestHeader("Authorization", required = false) token: String?
     ): ResponseEntity<User> {
-        logger.info("We got Token: $token")
-        val userFound = userService.findByToken(token.orEmpty())
-        if (token == null || (userFound == null)) {
-            logger.warn("User not found or no token.")
+
+        val cleanToken = token?.removePrefix("Bearer ")?.trim().orEmpty()
+        logger.info("[users/me] [ATTEMPT] From token [${cleanToken.take(10)}]")
+
+        if(cleanToken.isEmpty()){
+            logger.warn("[users/me] [FAILED] No token given.")
             return ResponseEntity.status(401).build()
         }
-        logger.info("User found in service: $userFound")
+
+        val userFound = userService.findByToken(cleanToken.orEmpty())
+
+        if (userFound == null) {
+            logger.warn("[users/me] [FAILED] No user found. Token may be invalid of expired.")
+            return ResponseEntity.status(401).build()
+        }
+
+        logger.info("[users/me] [SUCCESS] User found in service: $userFound")
         return ResponseEntity.ok(userFound)
     }
 
