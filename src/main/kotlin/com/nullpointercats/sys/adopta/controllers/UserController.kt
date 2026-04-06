@@ -97,19 +97,18 @@ class UserController {
     fun login(
         @RequestBody loginRequest: LoginRequest
         ): ResponseEntity<Any> {
-            
+            logger.info("[users/login] [ATTEMPT] Attempting login for email ${loginRequest.email}")
+
             val passwordHash = hashPassword(loginRequest.password)
-            logger.info("password from request: $passwordHash")
-            
             val userFound = userService.login(loginRequest.email, passwordHash)
-            logger.info("try make login with: $loginRequest")
-            logger.info("user password: ${userFound?.password}")
             
-            return if (userFound != null) {
-                ResponseEntity.ok(LoginResponse(userFound.token.orEmpty()))
-            } else {
-                ResponseEntity.status(401).build()
+            if (userFound == null) {
+                logger.info("[users/login] [FAILED] Invalid credentials for email ${loginRequest.email}")
+                return ResponseEntity.status(401).build()
             }
+
+            logger.info("[users/login] [SUCCESS] Successfully login for user ${loginRequest.email} ")
+            return ResponseEntity.ok(LoginResponse(userFound.token.orEmpty()))
         }
 
     /**
