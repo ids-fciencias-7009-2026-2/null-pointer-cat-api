@@ -34,7 +34,7 @@ class UserEntity(
     @Column(name = "gender")
     var gender: String,
 
-    @Column(name = "email")
+    @Column(name = "email", unique = true, nullable = false )
     var email: String,
 
     @Column(name = "zipcode")

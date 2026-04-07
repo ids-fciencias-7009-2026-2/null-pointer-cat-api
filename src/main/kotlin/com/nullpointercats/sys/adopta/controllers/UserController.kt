@@ -42,12 +42,22 @@ class UserController {
         @RequestHeader("Authorization", required = false) token: String?
     ): ResponseEntity<User> {
 
-        logger.info("We got Token: $token")
-        val userFound = userService.findByToken(token.orEmpty())
-        if (token == null || (userFound == null)) {
+        val cleanToken = token?.removePrefix("Bearer ")?.trim().orEmpty()
+        logger.info("[users/me] [ATTEMPT] From token [${cleanToken.take(10)}]")
+
+        if(cleanToken.isEmpty()){
+            logger.warn("[users/me] [FAILED] No token given.")
             return ResponseEntity.status(401).build()
         }
-        logger.info("User found in service: $userFound")
+
+        val userFound = userService.findByToken(cleanToken.orEmpty())
+
+        if (userFound == null) {
+            logger.warn("[users/me] [FAILED] No user found. Token may be invalid of expired.")
+            return ResponseEntity.status(401).build()
+        }
+
+        logger.info("[users/me] [SUCCESS] User found in service: $userFound")
         return ResponseEntity.ok(userFound)
     }
 
@@ -61,12 +71,20 @@ class UserController {
     fun addUser(
         @RequestBody registerUserRequest: RegisterRequest
     ): ResponseEntity<User> {
+
+        logger.info("[users/register] [ATTEMPT] Attempting new user registration with mail ${registerUserRequest.email}")
         val userToAdd = registerUserRequest.toUser()
         val password = hashPassword(registerUserRequest.password)
         userToAdd.password = password
-        userService.addNewUser(userToAdd)
-        logger.info("User to add: $userToAdd")
-        return ResponseEntity.ok(userToAdd)
+
+        val userAdded = userService.addNewUser(userToAdd)
+        if(userAdded == null) {
+            logger.warn("[users/register] [FAILED] The email ${registerUserRequest.email} has been registered before.")
+            return ResponseEntity.status(409).build()
+        }
+
+        logger.info("[users/register] [SUCCESS] User registered successfully with email ${userAdded.email} ")
+        return ResponseEntity.ok(userAdded)
     }
 
     /**
@@ -79,19 +97,18 @@ class UserController {
     fun login(
         @RequestBody loginRequest: LoginRequest
         ): ResponseEntity<Any> {
-            
+            logger.info("[users/login] [ATTEMPT] Attempting login for email ${loginRequest.email}")
+
             val passwordHash = hashPassword(loginRequest.password)
-            logger.info("password from request: $passwordHash")
-            
             val userFound = userService.login(loginRequest.email, passwordHash)
-            logger.info("try make login with: $loginRequest")
-            logger.info("user password: ${userFound?.password}")
             
-            return if (userFound != null) {
-                ResponseEntity.ok(LoginResponse(userFound.token.orEmpty()))
-            } else {
-                ResponseEntity.status(401).build()
+            if (userFound == null) {
+                logger.info("[users/login] [FAILED] Invalid credentials for email ${loginRequest.email}")
+                return ResponseEntity.status(401).build()
             }
+
+            logger.info("[users/login] [SUCCESS] Successfully login for user ${loginRequest.email} ")
+            return ResponseEntity.ok(LoginResponse(userFound.token.orEmpty()))
         }
 
     /**
@@ -104,14 +121,18 @@ class UserController {
     fun logout(
         @RequestHeader("Authorization") authHeader: String
     ): ResponseEntity<Any> {
-        val token = authHeader.removePrefix("Bearer ").trim()
-        val success = userService.logout(token)
-        return if (success) {
-            logger.info("Logout successful!")
-            ResponseEntity.ok(LogoutResponse(logoutDateTime = LocalDateTime.now().toString()))
-        } else {
-            ResponseEntity.status(401).build()
+        val cleanToken = authHeader.removePrefix("Bearer ").trim()
+        logger.info("[users/logout] [ATTEMPT] From token [${cleanToken.take(10)}]")
+
+        val success = userService.logout(cleanToken)
+
+        if (!success) {
+            logger.warn("[users/logout] [FAILED] Invalid token or already log out.")
+            return ResponseEntity.status(401).build()
         }
+
+        logger.info("[users/logout] [SUCCESS] Successfully log out.")
+        return ResponseEntity.ok(LogoutResponse(logoutDateTime = LocalDateTime.now().toString()))
     }
 
     /**
@@ -125,29 +146,42 @@ class UserController {
      */
     @PutMapping
     fun updateUser(
+        @RequestHeader("Authorization", required = false) token: String?,
         @RequestBody updateRequest: UpdateRequest
     ): ResponseEntity<User> {
-        // Simulate fetching the existing user (fake data)
-        val existingUser = User(
-            id        = "x-id",
-            username  = "x-username",
-            email     = "x-email@gmail.com",
-            password  = "test123",
-            firstname = "x-fname",
-            lastname  = "x-lname",
-            zipcode   = "0"
+
+        val cleanToken = token?.removePrefix("Bearer ")?.trim().orEmpty()
+        logger.info("[users] [ATTEMPT] Update user data. From token [${cleanToken.take(10)}]")
+
+        if(cleanToken.isEmpty()){
+            logger.warn("[update/users] [FAILED] No token given.")
+            return ResponseEntity.status(401).build()
+        }
+
+        val userFound = userService.findByToken(cleanToken)
+
+        if (userFound == null) {
+            logger.warn("[UPDATE /users] [FAILED] No user found. Token may be invalid of expired.")
+            return ResponseEntity.status(401).build()
+        }
+
+        val updatedUser =  userFound.copy(
+            username  = updateRequest.username  ?: userFound.username,
+            firstname = updateRequest.firstname ?: userFound.firstname,
+            lastname  = updateRequest.lastname  ?: userFound.lastname,
+            zipcode   = updateRequest.zipcode   ?: userFound.zipcode
         )
 
-        // Apply the updates
-        val updatedUser = existingUser.copy(
-            username  = updateRequest.username,
-            firstname = updateRequest.firstname,
-            lastname  = updateRequest.lastname,
-            zipcode   = updateRequest.zipcode
-        )
+        val savedUser = userService.updateUser(updatedUser)
 
-        logger.info("User updated: $updatedUser")
-        return ResponseEntity.ok(updatedUser)
+        if (savedUser == null) {
+            logger.warn("[UPDATE /users] [FAILED] Failed to update user.")
+            return ResponseEntity.status(500).build()
+        }
+
+        logger.info("[UPDATE /users] [SUCCESS] User found successfully updated. ${savedUser}")
+        return ResponseEntity.ok(savedUser)
+
     }
 
     fun hashPassword(password: String): String {

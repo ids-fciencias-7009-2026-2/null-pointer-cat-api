@@ -27,8 +27,16 @@ class UserService {
     *
     * @param user The user domain object to be registered.
     * @return user The saved user with the password field replace by "****".
+     * or null when the email has been already registered before.
     * */
-    fun addNewUser(user: User): User {
+    fun addNewUser(user: User): User? {
+
+        val existingUser = userRepository.findByEmail(user.email)
+        if (existingUser != null) {
+            logger.warn("There is already an account with email '${user.email}'")
+            return null
+        }
+
         val userEntity = user.toUserEntity() // Map domain to database entity
         userRepository.save(userEntity)
         user.password = "****"
@@ -89,6 +97,32 @@ class UserService {
             logger.warn("Logout attempted with invalid or expired token: $token")
             false
         }
+    }
+
+    /**
+     * Update the information of an existing user.
+     *
+     * @param user The user domain object with the email to search and the new data to be updated.
+     * @return user The updated user with the password field replace by "****".
+     * or null when there is no user matching the provide email.
+     * */
+    fun updateUser(user: User): User? {
+        val userEntity = userRepository.findByEmail(user.email)
+
+        if (userEntity == null) {
+            logger.warn("Not found user with email: ${user.email}")
+            return null
+        }
+
+        userEntity.firstname = user.firstname
+        userEntity.lastname = user.lastname
+        userEntity.zipcode = user.zipcode
+
+        val savedEntity = userRepository.save(userEntity)
+        val updatedUser = savedEntity.toUser()
+        updatedUser.password = "****"
+
+        return updatedUser
     }
 
 }
