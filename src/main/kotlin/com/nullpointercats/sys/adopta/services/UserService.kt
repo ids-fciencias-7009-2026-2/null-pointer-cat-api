@@ -115,6 +115,7 @@ class UserService {
         }
 
         userEntity.firstname = user.firstname
+        userEntity.username = user.username
         userEntity.lastname = user.lastname
         userEntity.zipcode = user.zipcode
 

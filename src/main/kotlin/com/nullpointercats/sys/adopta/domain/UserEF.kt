@@ -24,7 +24,7 @@ fun RegisterRequest.toUser(): User {
 fun UserEntity.toUser(): User {
     return User(
         id = this.id.toString(),
-        username = this.firstname, // Temporalmente, será el nombre de pila
+        username = this.username,
         firstname = this.firstname,
         lastname = this.lastname,
         email = this.email,

@@ -11,6 +11,7 @@ fun User.toUserEntity(): UserEntity {
     return UserEntity(
         id = null,
         firstname = this.firstname,
+        username = this.username,
         lastname = this.lastname,
         birthdate = LocalDate.now(), // Not sure about it...
         gender = "No idea",
