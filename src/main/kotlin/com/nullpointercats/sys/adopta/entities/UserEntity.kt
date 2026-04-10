@@ -22,6 +22,9 @@ class UserEntity(
     @Column(name = "id_user")
     val id: Int? = null,
 
+    @Column(name = "username")
+    var username: String,
+
     @Column(name = "first_name")
     var firstname: String,
 

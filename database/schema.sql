@@ -1,6 +1,10 @@
 -- =================
 --  adoption_user
 -- =================
+CREATE DATABASE IF NOT EXISTS adoption_db;
+USE adoption_db;
+
+DROP TABLE IF EXISTS adoption_user;
 
 CREATE TABLE adoption_user (
     id_user       SERIAL PRIMARY KEY,

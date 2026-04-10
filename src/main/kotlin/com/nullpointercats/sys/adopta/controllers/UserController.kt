@@ -151,10 +151,10 @@ class UserController {
     ): ResponseEntity<User> {
 
         val cleanToken = token?.removePrefix("Bearer ")?.trim().orEmpty()
-        logger.info("[users] [ATTEMPT] Update user data. From token [${cleanToken.take(10)}]")
+        logger.info("[UPDATE /users] [ATTEMPT] Update user data. From token [${cleanToken.take(10)}]")
 
         if(cleanToken.isEmpty()){
-            logger.warn("[update/users] [FAILED] No token given.")
+            logger.warn("[UPDATE /users] [FAILED] No token given.")
             return ResponseEntity.status(401).build()
         }
 
