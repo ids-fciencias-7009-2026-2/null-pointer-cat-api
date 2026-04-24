@@ -1,7 +1,10 @@
 package com.nullpointercats.sys.adopta.animal.entities
 
 import jakarta.persistence.*
-
+/**
+ * BreedEntity is a persistence entity that represents an animal breed in the system.
+ * This class maps to the apoption_breed table.
+ * */
 @Entity
 @Table(name = "breed")
 data class BreedEntity (

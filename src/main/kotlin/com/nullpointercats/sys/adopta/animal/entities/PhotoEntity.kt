@@ -2,6 +2,10 @@ package com.nullpointercats.sys.adopta.animal.entities
 
 import jakarta.persistence.*
 
+/**
+ * PhotoEntity is a persistence entity that represents a photo related to an animal in the system.
+ * This class maps to the apoption_photo table.
+ * */
 @Entity
 @Table(name = "photo")
 data class PhotoEntity (

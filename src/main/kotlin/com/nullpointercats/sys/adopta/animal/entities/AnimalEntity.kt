@@ -5,6 +5,10 @@ import jakarta.persistence.*
 import java.time.LocalDate
 import java.time.LocalDateTime
 
+/**
+ * AnimalEntity is a persistence entity that represents an animal in the system.
+ * This class maps to the apoption_animal table.
+ * */
 @Entity
 @Table(name = "animals")
 data class AnimalEntity (
