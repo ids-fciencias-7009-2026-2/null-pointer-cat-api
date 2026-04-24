@@ -9,7 +9,7 @@ import java.util.UUID
  * into a User domain object.
  */
 
-fun RegisterRequest.toUser(): User {
+fun RegisterRequest.toDomain(): User {
     return User(
         id = UUID.randomUUID().toString(),
         username = this.username,
@@ -21,7 +21,10 @@ fun RegisterRequest.toUser(): User {
     )
 }
 
-fun UserEntity.toUser(): User {
+/**
+ * Converts an [UserEntity] into a [User] domain model.
+ */
+fun UserEntity.toDomain(): User {
     return User(
         id = this.id.toString(),
         username = this.username,

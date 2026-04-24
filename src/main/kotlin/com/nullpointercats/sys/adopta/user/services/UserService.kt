@@ -1,7 +1,7 @@
 package com.nullpointercats.sys.adopta.user.services
 
 import com.nullpointercats.sys.adopta.user.domain.User
-import com.nullpointercats.sys.adopta.user.domain.toUser
+import com.nullpointercats.sys.adopta.user.domain.toDomain
 import com.nullpointercats.sys.adopta.user.repositories.UserRepository
 import com.nullpointercats.sys.adopta.user.repositories.toUserEntity
 import org.slf4j.LoggerFactory
@@ -64,7 +64,7 @@ class UserService {
             userEntity.token = token
             userRepository.save(userEntity)
         }
-        return userEntity?.toUser()
+        return userEntity?.toDomain()
     }
 
     /**
@@ -76,7 +76,7 @@ class UserService {
     fun findByToken(token: String): User? {
         val userLogged = userRepository.findByToken(token)
         logger.info("User exists: ${userLogged.toString()}")
-        return userLogged?.toUser()
+        return userLogged?.toDomain()
     }
 
     /**
@@ -118,7 +118,7 @@ class UserService {
         userEntity.zipcode = user.zipcode
 
         val savedEntity = userRepository.save(userEntity)
-        val updatedUser = savedEntity.toUser()
+        val updatedUser = savedEntity.toDomain()
         updatedUser.password = "****"
 
         return updatedUser

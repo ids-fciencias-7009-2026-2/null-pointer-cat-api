@@ -1,7 +1,7 @@
 package com.nullpointercats.sys.adopta.user.controllers
 
 import com.nullpointercats.sys.adopta.user.domain.User
-import com.nullpointercats.sys.adopta.user.domain.toUser
+import com.nullpointercats.sys.adopta.user.domain.toDomain
 
 import com.nullpointercats.sys.adopta.user.dto.request.LoginRequest
 import com.nullpointercats.sys.adopta.user.dto.response.LoginResponse
@@ -73,7 +73,7 @@ class UserController {
     ): ResponseEntity<User> {
 
         logger.info("[users/register] [ATTEMPT] Attempting new user registration with mail ${registerUserRequest.email}")
-        val userToAdd = registerUserRequest.toUser()
+        val userToAdd = registerUserRequest.toDomain()
         val password = hashPassword(registerUserRequest.password)
         userToAdd.password = password
 
