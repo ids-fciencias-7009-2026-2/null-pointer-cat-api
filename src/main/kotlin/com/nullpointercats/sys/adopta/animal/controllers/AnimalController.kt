@@ -1,11 +1,8 @@
 package com.nullpointercats.sys.adopta.animal.controllers
 
 import com.nullpointercats.sys.adopta.animal.domain.Animal
-import com.nullpointercats.sys.adopta.animal.domain.toDomain
 import com.nullpointercats.sys.adopta.animal.dto.request.AnimalRegisterRequest
 import com.nullpointercats.sys.adopta.animal.services.AnimalService
-import com.nullpointercats.sys.adopta.user.controllers.UserController
-import com.nullpointercats.sys.adopta.user.domain.toUser
 import com.nullpointercats.sys.adopta.user.services.UserService
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
