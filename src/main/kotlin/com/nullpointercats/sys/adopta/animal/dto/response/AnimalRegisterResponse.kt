@@ -3,6 +3,10 @@ package com.nullpointercats.sys.adopta.animal.dto.response
 import java.time.LocalDate
 import java.time.LocalDateTime
 
+/**
+ * DTO representing the response sent back to the client
+ * after an animal is successfully registered.
+ */
 data class AnimalRegisterResponse (
     val idAnimal: Int,
     val animalName: String,
