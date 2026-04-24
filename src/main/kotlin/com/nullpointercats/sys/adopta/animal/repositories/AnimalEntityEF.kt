@@ -5,6 +5,9 @@ import com.nullpointercats.sys.adopta.animal.entities.*
 
 import com.nullpointercats.sys.adopta.user.entities.UserEntity
 
+/**
+ * Converts an [Animal] domain model into an [AnimalEntity].
+ */
 fun Animal.toEntity(domainUser: UserEntity,
                     domainBreed: BreedEntity?) : AnimalEntity {
 

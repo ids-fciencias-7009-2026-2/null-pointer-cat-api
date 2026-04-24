@@ -3,6 +3,9 @@ import com.nullpointercats.sys.adopta.animal.dto.request.AnimalRegisterRequest
 import com.nullpointercats.sys.adopta.animal.entities.AnimalEntity
 import com.nullpointercats.sys.adopta.user.domain.*
 
+/**
+ * Converts an [AnimalRegisterRequest] DTO into an [Animal] domain model.
+ */
 fun AnimalRegisterRequest.toDomain(
     publisherDomain: User,
     breedDomain: Breed?
@@ -22,6 +25,9 @@ fun AnimalRegisterRequest.toDomain(
     )
 }
 
+/**
+ * Converts an [AnimalEntity] into an [Animal] domain model.
+ */
 fun AnimalEntity.toDomain(): Animal {
     return Animal(
         idAnimal = this.idAnimal,
@@ -33,7 +39,7 @@ fun AnimalEntity.toDomain(): Animal {
         animalZipcode = this.animalZipcode,
         publishedAt = this.publishedAt,
 
-        publisher = this.user.toUser(),
+        publisher = this.user.toDomain(),
         breed = this.breed?.toDomain(),
         photos = this.photos.map { photoEntity -> photoEntity.toDomain() }
 
