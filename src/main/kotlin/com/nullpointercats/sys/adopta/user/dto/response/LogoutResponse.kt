@@ -1,4 +1,4 @@
-package com.nullpointercats.sys.adopta.dto.response
+package com.nullpointercats.sys.adopta.user.dto.response
 
 /**
  * DTO used to send logout confirmation information back to

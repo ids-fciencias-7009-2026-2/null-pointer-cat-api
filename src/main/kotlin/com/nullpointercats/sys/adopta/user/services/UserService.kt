@@ -1,14 +1,12 @@
-package com.nullpointercats.sys.adopta.services
+package com.nullpointercats.sys.adopta.user.services
 
-import com.nullpointercats.sys.adopta.domain.User
-import com.nullpointercats.sys.adopta.domain.toUser
-import com.nullpointercats.sys.adopta.entities.UserEntity
-import com.nullpointercats.sys.adopta.repositories.UserRepository
-import com.nullpointercats.sys.adopta.repositories.toUserEntity
+import com.nullpointercats.sys.adopta.user.domain.User
+import com.nullpointercats.sys.adopta.user.domain.toUser
+import com.nullpointercats.sys.adopta.user.repositories.UserRepository
+import com.nullpointercats.sys.adopta.user.repositories.toUserEntity
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
-import java.security.MessageDigest
 import java.util.UUID
 
 

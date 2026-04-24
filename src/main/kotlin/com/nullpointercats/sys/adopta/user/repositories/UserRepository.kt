@@ -1,7 +1,6 @@
-package com.nullpointercats.sys.adopta.repositories
+package com.nullpointercats.sys.adopta.user.repositories
 
-import com.nullpointercats.sys.adopta.entities.UserEntity
-import com.nullpointercats.sys.adopta.domain.User
+import com.nullpointercats.sys.adopta.user.entities.UserEntity
 import org.springframework.data.repository.CrudRepository
 import jakarta.transaction.Transactional
 import org.springframework.data.jpa.repository.Modifying

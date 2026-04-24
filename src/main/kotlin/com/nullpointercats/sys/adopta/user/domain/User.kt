@@ -1,4 +1,4 @@
-package com.nullpointercats.sys.adopta.domain
+package com.nullpointercats.sys.adopta.user.domain
 
 /**
  * Represents a user within Adopta system

@@ -1,4 +1,4 @@
-package com.nullpointercats.sys.adopta.dto.request
+package com.nullpointercats.sys.adopta.user.dto.request
 
 /**
  * DTO used to receive user registration data

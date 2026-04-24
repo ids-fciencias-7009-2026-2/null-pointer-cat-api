@@ -1,4 +1,4 @@
-package com.nullpointercats.sys.adopta.entities
+package com.nullpointercats.sys.adopta.user.entities
 
 import jakarta.persistence.Entity
 import jakarta.persistence.Column

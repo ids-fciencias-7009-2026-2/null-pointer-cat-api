@@ -1,14 +1,14 @@
-package com.nullpointercats.sys.adopta.controllers
+package com.nullpointercats.sys.adopta.user.controllers
 
-import com.nullpointercats.sys.adopta.domain.User
-import com.nullpointercats.sys.adopta.domain.toUser
+import com.nullpointercats.sys.adopta.user.domain.User
+import com.nullpointercats.sys.adopta.user.domain.toUser
 
-import com.nullpointercats.sys.adopta.dto.request.LoginRequest
-import com.nullpointercats.sys.adopta.dto.response.LoginResponse
-import com.nullpointercats.sys.adopta.dto.request.RegisterRequest
-import com.nullpointercats.sys.adopta.dto.request.UpdateRequest
-import com.nullpointercats.sys.adopta.dto.response.LogoutResponse
-import com.nullpointercats.sys.adopta.services.UserService
+import com.nullpointercats.sys.adopta.user.dto.request.LoginRequest
+import com.nullpointercats.sys.adopta.user.dto.response.LoginResponse
+import com.nullpointercats.sys.adopta.user.dto.request.RegisterRequest
+import com.nullpointercats.sys.adopta.user.dto.request.UpdateRequest
+import com.nullpointercats.sys.adopta.user.dto.response.LogoutResponse
+import com.nullpointercats.sys.adopta.user.services.UserService
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired

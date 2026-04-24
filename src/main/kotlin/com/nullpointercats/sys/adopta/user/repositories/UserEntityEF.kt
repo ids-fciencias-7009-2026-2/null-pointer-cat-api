@@ -1,7 +1,7 @@
-package com.nullpointercats.sys.adopta.repositories
+package com.nullpointercats.sys.adopta.user.repositories
 
-import  com.nullpointercats.sys.adopta.domain.User
-import com.nullpointercats.sys.adopta.entities.UserEntity
+import  com.nullpointercats.sys.adopta.user.domain.User
+import com.nullpointercats.sys.adopta.user.entities.UserEntity
 import java.time.LocalDate
 
 /** Extension funtion to map a User domain to a UserEntity.

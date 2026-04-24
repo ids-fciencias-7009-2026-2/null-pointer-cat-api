@@ -1,7 +1,7 @@
-package com.nullpointercats.sys.adopta.domain
+package com.nullpointercats.sys.adopta.user.domain
 
-import com.nullpointercats.sys.adopta.dto.request.RegisterRequest
-import com.nullpointercats.sys.adopta.entities.UserEntity
+import com.nullpointercats.sys.adopta.user.dto.request.RegisterRequest
+import com.nullpointercats.sys.adopta.user.entities.UserEntity
 import java.util.UUID
 
 /**
