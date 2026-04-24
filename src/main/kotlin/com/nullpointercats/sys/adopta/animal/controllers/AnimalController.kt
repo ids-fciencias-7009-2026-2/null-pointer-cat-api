@@ -18,10 +18,14 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import kotlin.jvm.java
 
+/**
+ * REST Controller for managing animal-related operations.
+ * */
+
 @RestController
 @RequestMapping("/animals")
 class AnimalController {
-    val logger: Logger = LoggerFactory.getLogger(UserController::class.java)
+    val logger: Logger = LoggerFactory.getLogger(AnimalController::class.java)
 
     @Autowired
     lateinit var animalService: AnimalService
@@ -30,7 +34,7 @@ class AnimalController {
     lateinit var userService: UserService
 
     /**
-     * Endpoint for
+     * Endpoint to register a new animal in the system.
      *
      * URL:    http://localhost:8080/animals/register
      * Method: POST
