@@ -1,3 +1,5 @@
+package com.nullpointercats.sys.adopta.animal.repositories
+
 import com.nullpointercats.sys.adopta.animal.domain.Breed
 import com.nullpointercats.sys.adopta.animal.entities.BreedEntity
 
