@@ -3,6 +3,7 @@ package com.nullpointercats.sys.adopta.config
 import org.springframework.context.annotation.Configuration
 import org.springframework.web.servlet.config.annotation.CorsRegistry
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry
 
 /**
  * CorsConfig is a configuration class that enables and customizes
@@ -13,7 +14,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
  * and headers.
  * */
 @Configuration
-class CorsConfig : WebMvcConfigurer {
+class CorsConfig (private val authInterceptor: AuthInterceptor) : WebMvcConfigurer {
 
     /**
      * Configures CORS mappings for all endpoints in the application.
@@ -29,5 +30,14 @@ class CorsConfig : WebMvcConfigurer {
             .allowedMethods("GET", "POST", "PUT", "DELETE")
             /** Allowed request headers */
             .allowedHeaders("*")
+    }
+
+    /**
+     * Registers interceptors for the application.
+     */
+    override fun addInterceptors(registry: InterceptorRegistry) {
+        registry.addInterceptor(authInterceptor)
+            .addPathPatterns("/**")
+            .excludePathPatterns("/users/login", "/users/register")
     }
 }

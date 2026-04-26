@@ -39,26 +39,11 @@ class UserController {
      */
     @GetMapping("/me")
     fun retrieveUser(
-        @RequestHeader("Authorization", required = false) token: String?
+        @RequestAttribute("authenticatedUser") user: User //
     ): ResponseEntity<User> {
 
-        val cleanToken = token?.removePrefix("Bearer ")?.trim().orEmpty()
-        logger.info("[users/me] [ATTEMPT] From token [${cleanToken.take(10)}]")
-
-        if(cleanToken.isEmpty()){
-            logger.warn("[users/me] [FAILED] No token given.")
-            return ResponseEntity.status(401).build()
-        }
-
-        val userFound = userService.findByToken(cleanToken.orEmpty())
-
-        if (userFound == null) {
-            logger.warn("[users/me] [FAILED] No user found. Token may be invalid of expired.")
-            return ResponseEntity.status(401).build()
-        }
-
-        logger.info("[users/me] [SUCCESS] User found in service: $userFound")
-        return ResponseEntity.ok(userFound)
+        logger.info("[users/me] [SUCCESS] User found in service: $user")
+        return ResponseEntity.ok(user)
     }
 
     /**
@@ -146,24 +131,9 @@ class UserController {
      */
     @PutMapping
     fun updateUser(
-        @RequestHeader("Authorization", required = false) token: String?,
+        @RequestAttribute("authenticatedUser") userFound: User,
         @RequestBody updateRequest: UpdateRequest
     ): ResponseEntity<User> {
-
-        val cleanToken = token?.removePrefix("Bearer ")?.trim().orEmpty()
-        logger.info("[UPDATE /users] [ATTEMPT] Update user data. From token [${cleanToken.take(10)}]")
-
-        if(cleanToken.isEmpty()){
-            logger.warn("[UPDATE /users] [FAILED] No token given.")
-            return ResponseEntity.status(401).build()
-        }
-
-        val userFound = userService.findByToken(cleanToken)
-
-        if (userFound == null) {
-            logger.warn("[UPDATE /users] [FAILED] No user found. Token may be invalid of expired.")
-            return ResponseEntity.status(401).build()
-        }
 
         val updatedUser =  userFound.copy(
             username  = updateRequest.username  ?: userFound.username,
