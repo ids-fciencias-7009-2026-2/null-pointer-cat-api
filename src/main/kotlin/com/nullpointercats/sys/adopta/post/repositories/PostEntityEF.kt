@@ -1,7 +1,6 @@
 package com.nullpointercats.sys.adopta.post.repositories
 
 import com.nullpointercats.sys.adopta.animal.entities.AnimalEntity
-import com.nullpointercats.sys.adopta.animal.repositories.toEntity
 import com.nullpointercats.sys.adopta.post.domain.Post
 import com.nullpointercats.sys.adopta.post.entities.PostEntity
 
