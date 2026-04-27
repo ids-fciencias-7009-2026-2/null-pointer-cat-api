@@ -8,7 +8,7 @@ import java.time.LocalDateTime
  * after an animal is successfully registered.
  */
 data class AnimalRegisterResponse (
-    val idAnimal: Int,
+    val idAnimal: Int?,
     val animalName: String,
     val species: String,
     val description: String?,
@@ -17,7 +17,4 @@ data class AnimalRegisterResponse (
     val animalZipcode: String,
     val publishedAt: LocalDateTime?,
 
-    val breedName: String?,
-    val publisherName: String,
-    val photoURLs: List<String>
 )

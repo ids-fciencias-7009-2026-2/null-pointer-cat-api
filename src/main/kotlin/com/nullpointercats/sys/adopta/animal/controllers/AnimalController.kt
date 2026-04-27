@@ -1,7 +1,10 @@
 package com.nullpointercats.sys.adopta.animal.controllers
 
 import com.nullpointercats.sys.adopta.animal.domain.Animal
+import com.nullpointercats.sys.adopta.animal.domain.toDomain
+import com.nullpointercats.sys.adopta.animal.domain.toResponse
 import com.nullpointercats.sys.adopta.animal.dto.request.AnimalRegisterRequest
+import com.nullpointercats.sys.adopta.animal.dto.response.AnimalRegisterResponse
 import com.nullpointercats.sys.adopta.animal.services.AnimalService
 import com.nullpointercats.sys.adopta.user.domain.User
 import com.nullpointercats.sys.adopta.user.services.UserService
@@ -40,13 +43,14 @@ class AnimalController {
      */
     @PostMapping("/register")
     fun addAnimal(
-        @RequestBody registerAnimalRequest: AnimalRegisterRequest,
+        @RequestBody request: AnimalRegisterRequest,
         @RequestAttribute("authenticatedUser") userFound: User
-    ): ResponseEntity<Animal> {
+    ): ResponseEntity<AnimalRegisterResponse> {
 
         logger.info("[animals/register] [ATTEMPT] Attempting new animal registration with from ${userFound.email}")
 
-        val animalSaved = animalService.addNewAnimal(registerAnimalRequest, userFound.id.toInt())
+        val animalDomain = request.toDomain(userFound, null)
+        val animalSaved = animalService.addNewAnimal(animalDomain, request.breedId)
 
         if (animalSaved == null) {
             logger.warn("[animals/register] [FAILED] Error adding new animal registration.")
@@ -54,6 +58,6 @@ class AnimalController {
         }
 
         logger.info("[animals/register] [SUCCESS] Animal registered successfully ")
-        return ResponseEntity.ok(animalSaved)
+        return ResponseEntity.ok(animalSaved.toResponse())
     }
 }

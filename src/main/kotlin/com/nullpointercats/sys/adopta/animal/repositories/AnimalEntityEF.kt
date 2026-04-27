@@ -23,8 +23,10 @@ fun Animal.toEntity(domainUser: UserEntity,
         user = domainUser
     )
 
-    val photoEntities = this.photos.map { it.toEntity(animalEntity) }.toMutableList()
-    animalEntity.photos = photoEntities
+    this.photos.forEach { photoDomain ->
+        val photoEntity = photoDomain.toEntity(animalEntity)
+        animalEntity.photos.add(photoEntity)
+    }
 
     return animalEntity
 }

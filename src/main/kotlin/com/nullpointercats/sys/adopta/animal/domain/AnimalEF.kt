@@ -1,7 +1,11 @@
 package com.nullpointercats.sys.adopta.animal.domain
 import com.nullpointercats.sys.adopta.animal.dto.request.AnimalRegisterRequest
+import com.nullpointercats.sys.adopta.animal.dto.response.AnimalRegisterResponse
 import com.nullpointercats.sys.adopta.animal.entities.AnimalEntity
 import com.nullpointercats.sys.adopta.user.domain.*
+import java.time.LocalDate
+import java.time.LocalDateTime
+import kotlin.String
 
 /**
  * Converts an [AnimalRegisterRequest] DTO into an [Animal] domain model.
@@ -22,6 +26,19 @@ fun AnimalRegisterRequest.toDomain(
         publisher = publisherDomain,
         breed = breedDomain,
         photos = this.photosURLs.map { url -> Photo(url = url) }
+    )
+}
+
+fun Animal.toResponse() : AnimalRegisterResponse {
+    return AnimalRegisterResponse(
+        idAnimal = this.idAnimal,
+        animalName = this.animalName,
+        species = this.species,
+        dateOfBirth = this.dateOfBirth,
+        description = this.description,
+        size = this.size,
+        animalZipcode = this.animalZipcode,
+        publishedAt = this.publishedAt
     )
 }
 
