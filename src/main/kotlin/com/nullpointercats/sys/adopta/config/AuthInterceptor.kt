@@ -20,6 +20,7 @@ class AuthInterceptor(
         response: HttpServletResponse,
         handler: Any): Boolean {
 
+        if (request.method.equals("OPTIONS")) return true;
         val token = request.getHeader("Authorization")
         val cleanToken = token?.removePrefix("Bearer ")?.trim().orEmpty()
 
