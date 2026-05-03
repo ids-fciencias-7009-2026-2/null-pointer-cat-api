@@ -134,3 +134,19 @@ ALTER TABLE animal_favorite ADD CONSTRAINT fk_favorite_animal FOREIGN KEY (id_an
 -- animal_favorite is the join table for the interest relationship (Adopter M:M Animal).
 -- The composite primary key (id_user, id_animal) prevents duplicate favorites.
 -- saved_at records when the user marked the animal as a favorite.
+
+
+-- =================
+--  post
+-- =================
+
+CREATE TABLE post(
+    id_post       SERIAL      PRIMARY KEY,
+    id_animal     INT         NOT NULL,
+    description   TEXT,
+    status        VARCHAR(20) NOT NULL DEFAULT 'ACTIVE',
+    created_at    TIMESTAMP   NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+ALTER TABLE post ADD CONSTRAINT fk_post_animal FOREIGN KEY (id_animal)  REFERENCES animal (id_animal) ON DELETE CASCADE;
+
