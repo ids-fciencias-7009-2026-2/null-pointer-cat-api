@@ -62,6 +62,7 @@ fun AnimalEntity.toDomain(): Animal {
         photos = this.photos.map { photoEntity -> photoEntity.toDomain() }
 
     )
+}
 
 fun Animal.toSearchResponse(): AnimalSearchResponse {
     return AnimalSearchResponse(
@@ -78,4 +79,3 @@ fun Animal.toSearchResponse(): AnimalSearchResponse {
     )
 }
 
-}

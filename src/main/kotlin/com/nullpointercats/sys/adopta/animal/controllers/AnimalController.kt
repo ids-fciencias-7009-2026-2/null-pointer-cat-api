@@ -3,8 +3,10 @@ package com.nullpointercats.sys.adopta.animal.controllers
 import com.nullpointercats.sys.adopta.animal.domain.Animal
 import com.nullpointercats.sys.adopta.animal.domain.toDomain
 import com.nullpointercats.sys.adopta.animal.domain.toResponse
+import com.nullpointercats.sys.adopta.animal.domain.toSearchResponse
 import com.nullpointercats.sys.adopta.animal.dto.request.AnimalRegisterRequest
 import com.nullpointercats.sys.adopta.animal.dto.response.AnimalRegisterResponse
+import com.nullpointercats.sys.adopta.animal.dto.response.AnimalSearchResponse
 import com.nullpointercats.sys.adopta.animal.services.AnimalService
 import com.nullpointercats.sys.adopta.user.domain.User
 import com.nullpointercats.sys.adopta.user.services.UserService
@@ -18,6 +20,8 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestHeader
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.GetMapping       
+import org.springframework.web.bind.annotation.RequestParam    
 import kotlin.jvm.java
 
 /**
@@ -93,5 +97,5 @@ class AnimalController {
         logger.info("[GET /animals] [SUCCESS] ${results.size} animals found")
         return ResponseEntity.ok(results)
     }
-    
+
 }

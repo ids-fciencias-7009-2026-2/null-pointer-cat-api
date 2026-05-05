@@ -1,6 +1,8 @@
 package com.nullpointercats.sys.adopta.animal.repositories
 
 import com.nullpointercats.sys.adopta.animal.entities.AnimalEntity
+import org.springframework.data.jpa.repository.Query 
+import org.springframework.data.repository.query.Param
 import org.springframework.data.repository.CrudRepository
 
 /**
