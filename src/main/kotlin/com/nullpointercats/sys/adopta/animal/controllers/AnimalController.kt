@@ -60,4 +60,38 @@ class AnimalController {
         logger.info("[animals/register] [SUCCESS] Animal registered successfully ")
         return ResponseEntity.ok(animalSaved.toResponse())
     }
+    
+    /**
+    * Endpoint to search animals available for adoption using optional filters.
+    *
+    * URL:    GET http://localhost:8080/animals
+    * Params (all optional):
+    *   species  → DOG | CAT
+    *   size     → small | medium | large | extra_large
+    *   zipcode  → e.g. 06600
+    *   breedId  → numeric breed ID
+    *
+    * Returns an empty list when no animals match — never 404.
+    */
+    
+    @GetMapping
+    fun searchAnimals(
+        @RequestParam(required = false) species: String?,
+        @RequestParam(required = false) size: String?,
+        @RequestParam(required = false) zipcode: String?,
+        @RequestParam(required = false) breedId: Int?,
+        @RequestAttribute("authenticatedUser") userFound: User
+    ): ResponseEntity<List<AnimalSearchResponse>> {
+        
+        logger.info(
+            "[GET /animals] [ATTEMPT] From ${userFound.email} " +
+            "— species=$species size=$size zipcode=$zipcode breedId=$breedId"
+            )
+            
+        val results = animalService.searchAnimals(species, size, zipcode, breedId).map { it.toSearchResponse() }
+        
+        logger.info("[GET /animals] [SUCCESS] ${results.size} animals found")
+        return ResponseEntity.ok(results)
+    }
+    
 }
