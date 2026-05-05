@@ -10,6 +10,7 @@ import com.nullpointercats.sys.adopta.user.services.UserService
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 
 /**
  * Service layer responsible for executing business logic related to animals.
@@ -35,6 +36,7 @@ class AnimalService {
     /**
      * Manage the registration of a new animal.
      */
+    @Transactional
     fun addNewAnimal(animal : Animal, breedId : Int?): Animal ? {
 
         val userEntityOptional = userRepository.findById(animal.publisher.id.toInt())
@@ -57,5 +59,26 @@ class AnimalService {
         }
 
     }
+    
+    /**
+     * * Retrieves a filtered list of animals available for adoption.
+     *
+     * * All filter parameters are optional.
+     * * Allowed values enforced by the DB:
+     * *   species → "DOG" | "CAT"
+     * *   size    → "small" | "medium" | "large" | "extra_large"
+    **/
+    
+    fun searchAnimals(species: String?,size: String?, zipcode: String?, breedName: String?
+    ): List<Animal> {
+        
+        val normalizedSpecies = species?.uppercase()?.trim()
+        val normalizedSize    = size?.lowercase()?.trim()
+        val normalizedBreedName = breedName?.lowercase()?.trim() 
+        
+        logger.info("Searching animals — species=$normalizedSpecies size=$normalizedSize zipcode=$zipcode breedName=$normalizedBreedName")
+        
+        return animalRepository.findByFilters(normalizedSpecies, normalizedSize, zipcode, normalizedBreedName).map { it.toDomain() }
+}
 
 }

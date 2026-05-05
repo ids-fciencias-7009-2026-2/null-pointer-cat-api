@@ -4,7 +4,13 @@
 CREATE DATABASE IF NOT EXISTS adoption_db;
 USE adoption_db;
 
-DROP TABLE IF EXISTS adoption_user;
+DROP TABLE IF EXISTS adoption_user CASCADE;
+DROP TABLE IF EXISTS animal_favorite CASCADE;
+DROP TABLE IF EXISTS post CASCADE;
+DROP TABLE IF EXISTS photo CASCADE;
+DROP TABLE IF EXISTS animal CASCADE;
+DROP TABLE IF EXISTS breed CASCADE;
+DROP TABLE IF EXISTS adoption_user CASCADE;
 
 CREATE TABLE adoption_user (
     id_user       SERIAL PRIMARY KEY,
@@ -32,6 +38,15 @@ ALTER TABLE adoption_user ADD CONSTRAINT ck_user_firstname CHECK (first_name <> 
 ALTER TABLE adoption_user ADD CONSTRAINT ck_user_lastname  CHECK (last_name <> '');
 ALTER TABLE adoption_user ADD CONSTRAINT ck_user_gender    CHECK (gender IN ('male', 'female', 'other', 'prefer_not_to_say'));
 ALTER TABLE adoption_user ADD CONSTRAINT ck_user_phone     CHECK (phone_number ~ '^\+?[0-9]{7,15}$');
+
+-- 1. Quitar la obligación de tener un valor (NOT NULL)
+-- ALTER TABLE adoption_user ALTER COLUMN gender DROP NOT NULL;
+-- ALTER TABLE adoption_user ALTER COLUMN birth_date DROP NOT NULL;
+
+-- 2. Quitar las restricciones de validación que fallan con nulos
+-- ALTER TABLE adoption_user DROP CONSTRAINT ck_user_gender;
+-- ALTER TABLE adoption_user DROP CONSTRAINT ck_user_birthdate;
+-- ALTER TABLE adoption_user DROP CONSTRAINT ck_user_max_age;
 
 -- adoption_user stores every registered person on the platform.
 -- Any user can act as publisher (post animals) or adopter (mark favorites),

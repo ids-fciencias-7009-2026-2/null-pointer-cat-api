@@ -3,8 +3,10 @@ package com.nullpointercats.sys.adopta.animal.controllers
 import com.nullpointercats.sys.adopta.animal.domain.Animal
 import com.nullpointercats.sys.adopta.animal.domain.toDomain
 import com.nullpointercats.sys.adopta.animal.domain.toResponse
+import com.nullpointercats.sys.adopta.animal.domain.toSearchResponse
 import com.nullpointercats.sys.adopta.animal.dto.request.AnimalRegisterRequest
 import com.nullpointercats.sys.adopta.animal.dto.response.AnimalRegisterResponse
+import com.nullpointercats.sys.adopta.animal.dto.response.AnimalSearchResponse
 import com.nullpointercats.sys.adopta.animal.services.AnimalService
 import com.nullpointercats.sys.adopta.user.domain.User
 import com.nullpointercats.sys.adopta.user.services.UserService
@@ -18,6 +20,8 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestHeader
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.GetMapping       
+import org.springframework.web.bind.annotation.RequestParam    
 import kotlin.jvm.java
 
 /**
@@ -60,4 +64,38 @@ class AnimalController {
         logger.info("[animals/register] [SUCCESS] Animal registered successfully ")
         return ResponseEntity.ok(animalSaved.toResponse())
     }
+    
+    /**
+    * Endpoint to search animals available for adoption using optional filters.
+    *
+    * URL:    GET http://localhost:8080/animals
+    * Params (all optional):
+    *   species  → DOG | CAT
+    *   size     → small | medium | large | extra_large
+    *   zipcode  → e.g. 06600
+    *   breedId  → numeric breed ID
+    *
+    * Returns an empty list when no animals match — never 404.
+    */
+    
+    @GetMapping
+    fun searchAnimals(
+        @RequestParam(required = false) species: String?,
+        @RequestParam(required = false) size: String?,
+        @RequestParam(required = false) zipcode: String?,
+        @RequestParam(required = false) breedName: String?,
+        @RequestAttribute("authenticatedUser") userFound: User
+    ): ResponseEntity<List<AnimalSearchResponse>> {
+        
+        logger.info(
+            "[GET /animals] [ATTEMPT] From ${userFound.email} " +
+            "— species=$species size=$size zipcode=$zipcode breedName=$breedName"
+            )
+            
+        val results = animalService.searchAnimals(species, size, zipcode, breedName).map { it.toSearchResponse() }
+        
+        logger.info("[GET /animals] [SUCCESS] ${results.size} animals found")
+        return ResponseEntity.ok(results)
+    }
+
 }
