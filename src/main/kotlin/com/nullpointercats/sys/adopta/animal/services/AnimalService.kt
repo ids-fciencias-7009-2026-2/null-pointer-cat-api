@@ -74,7 +74,7 @@ class AnimalService {
         
         val normalizedSpecies = species?.uppercase()?.trim()
         val normalizedSize    = size?.lowercase()?.trim()
-        val normalizedBreedName = breedName?.trim() 
+        val normalizedBreedName = breedName?.lowercase()?.trim() 
         
         logger.info("Searching animals — species=$normalizedSpecies size=$normalizedSize zipcode=$zipcode breedName=$normalizedBreedName")
         

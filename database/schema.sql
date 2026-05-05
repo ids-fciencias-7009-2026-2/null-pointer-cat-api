@@ -40,13 +40,13 @@ ALTER TABLE adoption_user ADD CONSTRAINT ck_user_gender    CHECK (gender IN ('ma
 ALTER TABLE adoption_user ADD CONSTRAINT ck_user_phone     CHECK (phone_number ~ '^\+?[0-9]{7,15}$');
 
 -- 1. Quitar la obligación de tener un valor (NOT NULL)
-ALTER TABLE adoption_user ALTER COLUMN gender DROP NOT NULL;
-ALTER TABLE adoption_user ALTER COLUMN birth_date DROP NOT NULL;
+-- ALTER TABLE adoption_user ALTER COLUMN gender DROP NOT NULL;
+-- ALTER TABLE adoption_user ALTER COLUMN birth_date DROP NOT NULL;
 
 -- 2. Quitar las restricciones de validación que fallan con nulos
-ALTER TABLE adoption_user DROP CONSTRAINT ck_user_gender;
-ALTER TABLE adoption_user DROP CONSTRAINT ck_user_birthdate;
-ALTER TABLE adoption_user DROP CONSTRAINT ck_user_max_age;
+-- ALTER TABLE adoption_user DROP CONSTRAINT ck_user_gender;
+-- ALTER TABLE adoption_user DROP CONSTRAINT ck_user_birthdate;
+-- ALTER TABLE adoption_user DROP CONSTRAINT ck_user_max_age;
 
 -- adoption_user stores every registered person on the platform.
 -- Any user can act as publisher (post animals) or adopter (mark favorites),
