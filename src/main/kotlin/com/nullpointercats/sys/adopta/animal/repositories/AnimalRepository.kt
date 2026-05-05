@@ -17,13 +17,13 @@ interface AnimalRepository : CrudRepository<AnimalEntity, Int> {
         WHERE (:species IS NULL OR a.species       = :species)
           AND (:size    IS NULL OR a.size          = :size)
           AND (:zipcode IS NULL OR a.animalZipcode = :zipcode)
-          AND (:breedId IS NULL OR b.idBreed       = :breedId)
-        ORDER BY a.publishedAt DESC
+          AND (:breedName IS NULL OR LOWER(b.breedName) LIKE LOWER(CONCAT('%', :breedName, '%')))
+          ORDER BY a.publishedAt DESC
     """)
     fun findByFilters(
         @Param("species") species: String?,
         @Param("size")    size: String?,
         @Param("zipcode") zipcode: String?,
-        @Param("breedId") breedId: Int?
+        @Param("breedName") breedName: String?
     ): List<AnimalEntity>
 }

@@ -83,16 +83,16 @@ class AnimalController {
         @RequestParam(required = false) species: String?,
         @RequestParam(required = false) size: String?,
         @RequestParam(required = false) zipcode: String?,
-        @RequestParam(required = false) breedId: Int?,
+        @RequestParam(required = false) breedName: String?,
         @RequestAttribute("authenticatedUser") userFound: User
     ): ResponseEntity<List<AnimalSearchResponse>> {
         
         logger.info(
             "[GET /animals] [ATTEMPT] From ${userFound.email} " +
-            "— species=$species size=$size zipcode=$zipcode breedId=$breedId"
+            "— species=$species size=$size zipcode=$zipcode breedName=$breedName"
             )
             
-        val results = animalService.searchAnimals(species, size, zipcode, breedId).map { it.toSearchResponse() }
+        val results = animalService.searchAnimals(species, size, zipcode, breedName).map { it.toSearchResponse() }
         
         logger.info("[GET /animals] [SUCCESS] ${results.size} animals found")
         return ResponseEntity.ok(results)
