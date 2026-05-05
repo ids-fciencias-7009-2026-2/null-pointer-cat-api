@@ -57,5 +57,25 @@ class AnimalService {
         }
 
     }
+    
+    /**
+     * * Retrieves a filtered list of animals available for adoption.
+     *
+     * * All filter parameters are optional.
+     * * Allowed values enforced by the DB:
+     * *   species → "DOG" | "CAT"
+     * *   size    → "small" | "medium" | "large" | "extra_large"
+    **/
+    
+    fun searchAnimals(species: String?,size: String?, zipcode: String?, breedId: Int?
+    ): List<Animal> {
+        
+        val normalizedSpecies = species?.uppercase()?.trim()
+        val normalizedSize    = size?.lowercase()?.trim()
+        
+        logger.info("Searching animals — species=$normalizedSpecies size=$normalizedSize zipcode=$zipcode breedId=$breedId")
+        
+        return animalRepository.findByFilters(normalizedSpecies, normalizedSize, zipcode, breedId).map { it.toDomain() }
+}
 
 }
