@@ -1,6 +1,7 @@
 package com.nullpointercats.sys.adopta.animal.domain
 import com.nullpointercats.sys.adopta.animal.dto.request.AnimalRegisterRequest
 import com.nullpointercats.sys.adopta.animal.dto.response.AnimalRegisterResponse
+import com.nullpointercats.sys.adopta.animal.dto.response.AnimalSearchResponse
 import com.nullpointercats.sys.adopta.animal.entities.AnimalEntity
 import com.nullpointercats.sys.adopta.user.domain.*
 import java.time.LocalDate
@@ -61,4 +62,20 @@ fun AnimalEntity.toDomain(): Animal {
         photos = this.photos.map { photoEntity -> photoEntity.toDomain() }
 
     )
+
+fun Animal.toSearchResponse(): AnimalSearchResponse {
+    return AnimalSearchResponse(
+        idAnimal      = this.idAnimal,
+        animalName    = this.animalName,
+        species       = this.species,
+        size          = this.size,
+        description   = this.description,
+        dateOfBirth   = this.dateOfBirth,
+        animalZipcode = this.animalZipcode,
+        publishedAt   = this.publishedAt,
+        breedName     = this.breed?.breedName,
+        photos        = this.photos.map { it.url }
+    )
+}
+
 }
