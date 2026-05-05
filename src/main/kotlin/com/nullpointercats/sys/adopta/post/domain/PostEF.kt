@@ -4,6 +4,8 @@ import com.nullpointercats.sys.adopta.animal.domain.Animal
 import com.nullpointercats.sys.adopta.animal.domain.toDomain
 import com.nullpointercats.sys.adopta.post.dto.request.PostRegisterRequest
 import com.nullpointercats.sys.adopta.post.dto.response.PostRegisterResponse
+import com.nullpointercats.sys.adopta.post.dto.request.PostUpdateRequest
+import com.nullpointercats.sys.adopta.post.dto.response.PostUpdateResponse
 import com.nullpointercats.sys.adopta.post.entities.PostEntity
 import java.time.LocalDateTime
 
@@ -36,5 +38,25 @@ fun PostEntity.toDomain(): Post {
         description = this.description,
         status = this.status,
         cratedAt = this.createdAt
+    )
+}
+
+// Convierte PostUpdateRequest → Post (dominio parcial, sin animal)
+fun PostUpdateRequest.toDomain(): Post {
+    return Post(
+        description = this.description,
+        status = this.status,
+        animal = null
+    )
+}
+
+// Convierte Post → PostUpdateResponse
+fun Post.toUpdateResponse(): PostUpdateResponse {
+    return PostUpdateResponse(
+        idPost = this.idPost!!,
+        description = this.description,
+        status = this.status,
+        createdAt = this.cratedAt!!,
+        idAnimal = this.animal!!.idAnimal!!
     )
 }
