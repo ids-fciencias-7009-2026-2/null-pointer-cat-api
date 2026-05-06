@@ -10,7 +10,7 @@ import java.time.LocalDateTime
  * This class maps to the apoption_animal table.
  * */
 @Entity
-@Table(name = "animals")
+@Table(name = "animal")
 data class AnimalEntity (
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
