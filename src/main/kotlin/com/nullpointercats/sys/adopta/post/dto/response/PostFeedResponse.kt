@@ -16,6 +16,10 @@ data class PostFeedResponse(
     val status: String,
     val createdAt: LocalDateTime,
 
+    val publisherUsername: String,
+    val publisherFirstname: String,
+    val publisherLastname: String,
+
     val idAnimal: Int,
     val animalName: String,
     val species: String,
