@@ -42,7 +42,6 @@ fun PostEntity.toDomain(): Post {
     )
 }
 
-// Convierte PostUpdateRequest → Post (dominio parcial, sin animal)
 fun PostUpdateRequest.toDomain(): Post {
     return Post(
         description = this.description,
@@ -51,7 +50,6 @@ fun PostUpdateRequest.toDomain(): Post {
     )
 }
 
-// Convierte Post → PostUpdateResponse
 fun Post.toUpdateResponse(): PostUpdateResponse {
     return PostUpdateResponse(
         idPost = this.idPost!!,
@@ -68,6 +66,10 @@ fun Post.toFeedResponse(): PostFeedResponse {
         description   = this.description,
         status        = this.status!!,
         createdAt     = this.cratedAt!!,
+
+        publisherUsername  = publisher.username,
+        publisherFirstname = publisher.firstname,
+        publisherLastname  = publisher.lastname,
 
         idAnimal      = this.animal!!.idAnimal!!,
         animalName    = this.animal.animalName,
