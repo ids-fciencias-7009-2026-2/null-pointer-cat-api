@@ -10,6 +10,11 @@ import com.nullpointercats.sys.adopta.animal.dto.response.AnimalSearchResponse
 import com.nullpointercats.sys.adopta.animal.services.AnimalService
 import com.nullpointercats.sys.adopta.user.domain.User
 import com.nullpointercats.sys.adopta.user.services.UserService
+import com.nullpointercats.sys.adopta.animal.domain.toUpdateResponse
+import com.nullpointercats.sys.adopta.animal.dto.request.AnimalUpdateRequest
+import com.nullpointercats.sys.adopta.animal.dto.response.AnimalUpdateResponse
+import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.PutMapping
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
@@ -134,6 +139,24 @@ class AnimalController {
 
         logger.info("[GET /animals/$id] [SUCCESS] Animal ${animal.animalName} found")
         return ResponseEntity.ok(response)
+    @PutMapping("/{id}")
+    fun updateAnimal(
+        @PathVariable id: Int,
+        @RequestBody request: AnimalUpdateRequest,
+        @RequestAttribute("authenticatedUser") userFound: User
+    ): ResponseEntity<AnimalUpdateResponse> {
+
+        logger.info("[animals/update] [ATTEMPT] User ${userFound.email} updating animal $id")
+
+        val updated = animalService.updateAnimal(id, request, userFound.id.toInt())
+
+        if (updated == null) {
+            logger.warn("[animals/update] [FAILED] Could not update animal $id for ${userFound.email}")
+            return ResponseEntity.status(409).build<AnimalUpdateResponse>()
+        }
+
+        logger.info("[animals/update] [SUCCESS] Animal $id updated")
+        return ResponseEntity.ok(updated.toUpdateResponse())
     }
 
 }

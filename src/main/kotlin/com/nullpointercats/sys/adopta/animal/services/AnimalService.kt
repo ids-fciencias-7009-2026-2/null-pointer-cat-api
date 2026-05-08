@@ -2,6 +2,7 @@ package com.nullpointercats.sys.adopta.animal.services
 
 import com.nullpointercats.sys.adopta.animal.domain.*
 import com.nullpointercats.sys.adopta.animal.dto.request.AnimalRegisterRequest
+import com.nullpointercats.sys.adopta.animal.dto.request.AnimalUpdateRequest
 import com.nullpointercats.sys.adopta.animal.repositories.*
 import com.nullpointercats.sys.adopta.user.domain.toDomain
 import com.nullpointercats.sys.adopta.user.repositories.UserRepository
@@ -11,6 +12,7 @@ import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import kotlin.text.get
 
 /**
  * Service layer responsible for executing business logic related to animals.
@@ -91,3 +93,52 @@ class AnimalService {
     }
 
 }
+    @Transactional
+    fun updateAnimal(
+        animalId: Int,
+        request: AnimalUpdateRequest,
+        userId: Int
+    ): Animal? {
+
+        val animalEntityOptional = animalRepository.findById(animalId)
+        if (animalEntityOptional.isEmpty) {
+            logger.warn("Attempt to update non-existing animal: $animalId")
+            return null
+        }
+        val animalEntity = animalEntityOptional.get()
+
+
+        if (animalEntity.user.id?.toLong() != userId.toLong()) {
+            logger.warn("User $userId tried to update animal $animalId owned by another user")
+            return null
+        }
+
+        request.animalName?.let   { animalEntity.animalName    = it }
+        request.species?.let      { animalEntity.species       = it }
+        request.description?.let  { animalEntity.description   = it }
+        request.size?.let         { animalEntity.size          = it }
+        request.animalZipcode?.let{ animalEntity.animalZipcode = it }
+        request.dateOfBirth?.let  { animalEntity.dateOfBirth   = it }
+
+        // Breed is optional
+        request.breedId?.let { id ->
+            val breedEntity = breedRepository.findById(id).orElse(null)
+            if (breedEntity == null) {
+                logger.warn("Breed $id not found, skipping breed update")
+            } else {
+                animalEntity.breed = breedEntity
+            }
+        }
+
+        return try {
+            val saved = animalRepository.save(animalEntity)
+            logger.info("Animal $animalId updated successfully")
+            saved.toDomain()
+        } catch (e: Exception) {
+            logger.error("Error updating animal $animalId: ${e.message}")
+            null
+        }
+    }
+
+}
+
