@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestAttribute
+import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestHeader
 import org.springframework.web.bind.annotation.RequestMapping
@@ -96,6 +97,43 @@ class AnimalController {
         
         logger.info("[GET /animals] [SUCCESS] ${results.size} animals found")
         return ResponseEntity.ok(results)
+    }
+
+    /**
+     * Endpoint to search for a specific animal by its id.
+     *
+     * URL:     http://localhost:8080/animals/{id}
+     * Method:  GET
+     *
+     * @param id The unique identifier of the animal.
+     * @throws NoSuchElementException if no animal is found
+     * and returns a 404 error.
+     */
+    @GetMapping("/{id}")
+    fun getAnimalInfo(
+        @PathVariable id: Int,
+        @RequestAttribute("authenticatedUser") userFound: User
+    ): ResponseEntity<AnimalSearchResponse> {
+
+        logger.info("[GET /animals/$id] [ATTEMPT] User ${userFound.email} is viewing pet $id")
+
+        val animal = animalService.getAnimalById(id)
+
+        val response = AnimalSearchResponse(
+            idAnimal = animal.idAnimal,
+            animalName = animal.animalName,
+            species = animal.species,
+            size = animal.size,
+            description = animal.description,
+            dateOfBirth = animal.dateOfBirth,
+            animalZipcode = animal.animalZipcode,
+            publishedAt = animal.publishedAt,
+            breedName = animal.breed?.breedName,
+            photos = animal.photos.map { it.url }
+        )
+
+        logger.info("[GET /animals/$id] [SUCCESS] Animal ${animal.animalName} found")
+        return ResponseEntity.ok(response)
     }
 
 }
