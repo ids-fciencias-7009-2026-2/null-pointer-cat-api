@@ -18,10 +18,10 @@ data class Photo (
     /**
      * Image width in pixels.
      * */
-    var width: Int ? = null,
+    var width: Int? = null,
 
     /**
      * Image height in pixels.
      * */
-    var height: Int ? = null,
+    var height: Int? = null,
 )
