@@ -82,7 +82,15 @@ class PostService {
             null
         }
     }
-
+    //to get the post for the home feed
+    fun getAllPosts(): List<Post> {
+        return try {
+            postRepository.findAll().map { it.toDomain() }
+        } catch (e: Exception) {
+            logger.error("Error fetching posts: ${e.message}")
+            emptyList()
+        }
+    }
 
 
 

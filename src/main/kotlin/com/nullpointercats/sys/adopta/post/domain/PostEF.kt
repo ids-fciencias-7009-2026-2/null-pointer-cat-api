@@ -6,6 +6,7 @@ import com.nullpointercats.sys.adopta.post.dto.request.PostRegisterRequest
 import com.nullpointercats.sys.adopta.post.dto.response.PostRegisterResponse
 import com.nullpointercats.sys.adopta.post.dto.request.PostUpdateRequest
 import com.nullpointercats.sys.adopta.post.dto.response.PostUpdateResponse
+import com.nullpointercats.sys.adopta.post.dto.response.PostFeedResponse
 import com.nullpointercats.sys.adopta.post.entities.PostEntity
 import java.time.LocalDateTime
 
@@ -58,5 +59,23 @@ fun Post.toUpdateResponse(): PostUpdateResponse {
         status = this.status,
         createdAt = this.cratedAt!!,
         idAnimal = this.animal!!.idAnimal!!
+    )
+}
+
+fun Post.toFeedResponse(): PostFeedResponse {
+    return PostFeedResponse(
+        idPost        = this.idPost!!,
+        description   = this.description,
+        status        = this.status!!,
+        createdAt     = this.cratedAt!!,
+
+        idAnimal      = this.animal!!.idAnimal!!,
+        animalName    = this.animal.animalName,
+        species       = this.animal.species,
+        size          = this.animal.size,
+        dateOfBirth   = this.animal.dateOfBirth,
+        animalZipcode = this.animal.animalZipcode,
+        breedName     = this.animal.breed?.breedName,
+        photos        = this.animal.photos.map { it.url }
     )
 }

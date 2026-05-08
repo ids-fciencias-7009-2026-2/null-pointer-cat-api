@@ -7,6 +7,8 @@ import com.nullpointercats.sys.adopta.post.dto.request.PostRegisterRequest
 import com.nullpointercats.sys.adopta.post.dto.response.PostRegisterResponse
 import com.nullpointercats.sys.adopta.post.dto.request.PostUpdateRequest
 import com.nullpointercats.sys.adopta.post.dto.response.PostUpdateResponse
+import com.nullpointercats.sys.adopta.post.domain.toFeedResponse
+import com.nullpointercats.sys.adopta.post.dto.response.PostFeedResponse
 import com.nullpointercats.sys.adopta.post.services.PostService
 import com.nullpointercats.sys.adopta.user.domain.User
 import org.slf4j.Logger
@@ -20,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PutMapping
+import org.springframework.web.bind.annotation.GetMapping
 
 @RestController
 @RequestMapping("/post")
@@ -68,6 +71,31 @@ class PostController {
 
         logger.info("[post/update] [SUCCESS] Post $id updated")
         return ResponseEntity.ok(updated.toUpdateResponse())
+    }
+
+    /**
+     * Retrieves all active posts for the adoption feed.
+     *
+     * URL:    GET http://localhost:8080/post
+     * Method: GET
+     *
+     * Returns a list of [PostFeedResponse] objects, each containing
+     * post details along with the associated animal's information,
+     * so the client can render a complete feed card without additional requests.
+     *
+     * An empty list is returned when no posts are available.
+     */
+    @GetMapping
+    fun getFeedPosts(
+        @RequestAttribute("authenticatedUser") userFound: User
+    ): ResponseEntity<List<PostFeedResponse>> {
+
+        logger.info("[GET /post] [ATTEMPT] Feed requested by ${userFound.email}")
+
+        val posts = postService.getAllPosts().map { it.toFeedResponse() }
+
+        logger.info("[GET /post] [SUCCESS] ${posts.size} posts returned")
+        return ResponseEntity.ok(posts)
     }
 
 
