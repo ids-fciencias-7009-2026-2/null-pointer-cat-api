@@ -83,6 +83,16 @@ class AnimalService {
         return animalRepository.findByFilters(normalizedSpecies, normalizedSize, zipcode, normalizedBreedName).map { it.toDomain() }
 }
 
+    /**
+     * Retrieves a single animal by searching for its id.
+     */
+    fun getAnimalById(id: Int): Animal {
+        return animalRepository.findById(id)
+            .map { it.toDomain() }
+            .orElseThrow { NoSuchElementException("No se encontró el animal con ID: $id") }
+    }
+
+}
     @Transactional
     fun updateAnimal(
         animalId: Int,
