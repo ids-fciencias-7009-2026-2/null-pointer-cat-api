@@ -3,6 +3,7 @@ import com.nullpointercats.sys.adopta.animal.dto.request.AnimalRegisterRequest
 import com.nullpointercats.sys.adopta.animal.dto.response.AnimalRegisterResponse
 import com.nullpointercats.sys.adopta.animal.dto.response.AnimalSearchResponse
 import com.nullpointercats.sys.adopta.animal.entities.AnimalEntity
+import com.nullpointercats.sys.adopta.animal.dto.response.AnimalUpdateResponse
 import com.nullpointercats.sys.adopta.user.domain.*
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -76,6 +77,20 @@ fun Animal.toSearchResponse(): AnimalSearchResponse {
         publishedAt   = this.publishedAt,
         breedName     = this.breed?.breedName,
         photos        = this.photos.map { it.url }
+    )
+}
+
+fun Animal.toUpdateResponse(): AnimalUpdateResponse {
+    return AnimalUpdateResponse(
+        idAnimal      = this.idAnimal,
+        animalName    = this.animalName,
+        species       = this.species,
+        description   = this.description,
+        dateOfBirth   = this.dateOfBirth,
+        size          = this.size,
+        animalZipcode = this.animalZipcode,
+        publishedAt   = this.publishedAt,
+        breedName     = this.breed?.breedName
     )
 }
 

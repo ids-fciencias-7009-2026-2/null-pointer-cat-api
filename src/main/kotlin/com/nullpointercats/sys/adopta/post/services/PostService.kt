@@ -65,13 +65,11 @@ class PostService {
         }
         val postEntity = postEntityOptional.get()
 
-        // Solo el dueño del animal puede editar la publicación
         if (postEntity.animal.user.id != userId) {
             logger.warn("Attempt to update post $postId by non-owner user $userId")
             return null
         }
 
-        // Solo pisamos los campos que llegaron en el request
         updatedPost.description?.let { postEntity.description = it }
         updatedPost.status?.let    { postEntity.status = it }
 
@@ -84,7 +82,15 @@ class PostService {
             null
         }
     }
-
+    //to get the post for the home feed
+    fun getAllPosts(): List<Post> {
+        return try {
+            postRepository.findAll().map { it.toDomain() }
+        } catch (e: Exception) {
+            logger.error("Error fetching posts: ${e.message}")
+            emptyList()
+        }
+    }
 
 
 
