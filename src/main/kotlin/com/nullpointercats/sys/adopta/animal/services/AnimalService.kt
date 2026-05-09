@@ -92,7 +92,6 @@ class AnimalService {
             .orElseThrow { NoSuchElementException("No se encontró el animal con ID: $id") }
     }
 
-}
     @Transactional
     fun updateAnimal(
         animalId: Int,

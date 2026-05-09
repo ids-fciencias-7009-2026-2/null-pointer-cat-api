@@ -21,7 +21,6 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestAttribute
-import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestHeader
 import org.springframework.web.bind.annotation.RequestMapping
@@ -70,7 +69,7 @@ class AnimalController {
         logger.info("[animals/register] [SUCCESS] Animal registered successfully ")
         return ResponseEntity.ok(animalSaved.toResponse())
     }
-    
+
     /**
     * Endpoint to search animals available for adoption using optional filters.
     *
@@ -83,7 +82,7 @@ class AnimalController {
     *
     * Returns an empty list when no animals match — never 404.
     */
-    
+
     @GetMapping
     fun searchAnimals(
         @RequestParam(required = false) species: String?,
@@ -92,14 +91,14 @@ class AnimalController {
         @RequestParam(required = false) breedName: String?,
         @RequestAttribute("authenticatedUser") userFound: User
     ): ResponseEntity<List<AnimalSearchResponse>> {
-        
+
         logger.info(
             "[GET /animals] [ATTEMPT] From ${userFound.email} " +
             "— species=$species size=$size zipcode=$zipcode breedName=$breedName"
             )
-            
+
         val results = animalService.searchAnimals(species, size, zipcode, breedName).map { it.toSearchResponse() }
-        
+
         logger.info("[GET /animals] [SUCCESS] ${results.size} animals found")
         return ResponseEntity.ok(results)
     }
@@ -139,6 +138,8 @@ class AnimalController {
 
         logger.info("[GET /animals/$id] [SUCCESS] Animal ${animal.animalName} found")
         return ResponseEntity.ok(response)
+    }
+
     @PutMapping("/{id}")
     fun updateAnimal(
         @PathVariable id: Int,
