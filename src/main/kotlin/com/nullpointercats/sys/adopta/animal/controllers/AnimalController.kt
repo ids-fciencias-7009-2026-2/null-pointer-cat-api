@@ -3,6 +3,7 @@ package com.nullpointercats.sys.adopta.animal.controllers
 import com.nullpointercats.sys.adopta.animal.domain.Animal
 import com.nullpointercats.sys.adopta.animal.domain.toDomain
 import com.nullpointercats.sys.adopta.animal.domain.toResponse
+import com.nullpointercats.sys.adopta.animal.domain.toSimpleResponse
 import com.nullpointercats.sys.adopta.animal.domain.toSearchResponse
 import com.nullpointercats.sys.adopta.animal.dto.request.AnimalRegisterRequest
 import com.nullpointercats.sys.adopta.animal.dto.response.AnimalRegisterResponse
@@ -12,6 +13,7 @@ import com.nullpointercats.sys.adopta.user.domain.User
 import com.nullpointercats.sys.adopta.user.services.UserService
 import com.nullpointercats.sys.adopta.animal.domain.toUpdateResponse
 import com.nullpointercats.sys.adopta.animal.dto.request.AnimalUpdateRequest
+import com.nullpointercats.sys.adopta.animal.dto.response.AnimalResponse
 import com.nullpointercats.sys.adopta.animal.dto.response.AnimalUpdateResponse
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PutMapping
@@ -163,6 +165,25 @@ class AnimalController {
 
         logger.info("[animals/update] [SUCCESS] Animal $id updated")
         return ResponseEntity.ok(updated.toUpdateResponse())
+    }
+
+
+    @GetMapping("/my_animals")
+    fun getMyAnimals(
+        @RequestAttribute("authenticatedUser") userFound: User
+    ) : ResponseEntity<List<AnimalResponse>> {
+
+        logger.info("[animals/my_animals] [ATTEMPT] User ${userFound.email} request to get all its animals.")
+
+        val animals = animalService.getAnimalsFromUser(userFound.id.toInt())
+
+        if (!animals.isEmpty()) {
+            logger.info("[animals/my_animals] [SUCCESS] We got ${animals.size} animals")
+            logger.info("[animals/my_animals] [SUCCESS] We got ${animals.map { a -> a.idAnimal }} animals")
+        }
+
+        val responseList: List<AnimalResponse> = animals.map { it.toSimpleResponse() }
+        return ResponseEntity.ok(responseList)
     }
 
 }

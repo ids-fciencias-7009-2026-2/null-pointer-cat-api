@@ -1,6 +1,7 @@
 package com.nullpointercats.sys.adopta.animal.domain
 import com.nullpointercats.sys.adopta.animal.dto.request.AnimalRegisterRequest
 import com.nullpointercats.sys.adopta.animal.dto.response.AnimalRegisterResponse
+import com.nullpointercats.sys.adopta.animal.dto.response.AnimalResponse
 import com.nullpointercats.sys.adopta.animal.dto.response.AnimalSearchResponse
 import com.nullpointercats.sys.adopta.animal.entities.AnimalEntity
 import com.nullpointercats.sys.adopta.animal.dto.response.AnimalUpdateResponse
@@ -91,6 +92,13 @@ fun Animal.toUpdateResponse(): AnimalUpdateResponse {
         animalZipcode = this.animalZipcode,
         publishedAt   = this.publishedAt,
         breedName     = this.breed?.breedName
+    )
+}
+
+fun Animal.toSimpleResponse(): AnimalResponse {
+    return AnimalResponse(
+        idAnimal = this.idAnimal ?:0,
+        animalName = this.animalName
     )
 }
 

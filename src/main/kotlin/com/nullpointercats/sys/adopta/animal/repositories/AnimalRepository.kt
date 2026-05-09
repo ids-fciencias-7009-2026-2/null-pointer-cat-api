@@ -7,6 +7,9 @@ import org.springframework.data.repository.query.Param
 
 interface AnimalRepository : CrudRepository<AnimalEntity, Int> {
 
+    @Query("""SELECT a FROM AnimalEntity a WHERE a.user.id = :userId""")
+    fun findAnimalsByUserId(@Param("userId") userId: Int): List<AnimalEntity>
+
     @Query(value = """
         SELECT DISTINCT a.* 
         FROM animal a
@@ -23,4 +26,5 @@ interface AnimalRepository : CrudRepository<AnimalEntity, Int> {
         @Param("zipcode")   zipcode: String?,
         @Param("breedName") breedName: String?
     ): List<AnimalEntity>
+
 }

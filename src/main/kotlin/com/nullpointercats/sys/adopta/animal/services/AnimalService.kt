@@ -4,6 +4,8 @@ import com.nullpointercats.sys.adopta.animal.domain.*
 import com.nullpointercats.sys.adopta.animal.dto.request.AnimalRegisterRequest
 import com.nullpointercats.sys.adopta.animal.dto.request.AnimalUpdateRequest
 import com.nullpointercats.sys.adopta.animal.repositories.*
+import com.nullpointercats.sys.adopta.post.domain.Post
+import com.nullpointercats.sys.adopta.post.domain.toDomain
 import com.nullpointercats.sys.adopta.user.domain.toDomain
 import com.nullpointercats.sys.adopta.user.repositories.UserRepository
 import com.nullpointercats.sys.adopta.user.repositories.toUserEntity
@@ -135,6 +137,15 @@ class AnimalService {
         } catch (e: Exception) {
             logger.error("Error updating animal $animalId: ${e.message}")
             null
+        }
+    }
+
+    fun getAnimalsFromUser(id : Int): List<Animal> {
+        return try {
+            animalRepository.findAnimalsByUserId(id).map { it.toDomain() }
+        } catch (e: Exception) {
+            logger.error("Error fetching animals: ${e.message}")
+            emptyList()
         }
     }
 
