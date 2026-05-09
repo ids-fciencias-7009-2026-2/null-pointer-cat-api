@@ -81,6 +81,7 @@ fun Post.toFeedResponse(): PostFeedResponse {
         dateOfBirth   = this.animal.dateOfBirth,
         animalZipcode = this.animal.animalZipcode,
         breedName     = this.animal.breed?.breedName,
+        animalDescription = this.animal.description,
         photos        = this.animal.photos.map { it.url }
     )
 }
