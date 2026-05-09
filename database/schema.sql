@@ -45,7 +45,7 @@ ALTER TABLE adoption_user ALTER COLUMN birth_date DROP NOT NULL;
 
 -- 2. Quitar las restricciones de validación que fallan con nulos
 ALTER TABLE adoption_user DROP CONSTRAINT ck_user_gender;
- ALTER TABLE adoption_user DROP CONSTRAINT ck_user_birthdate;
+ALTER TABLE adoption_user DROP CONSTRAINT ck_user_birthdate;
 ALTER TABLE adoption_user DROP CONSTRAINT ck_user_max_age;
 
 -- adoption_user stores every registered person on the platform.

@@ -27,5 +27,6 @@ data class PostFeedResponse(
     val dateOfBirth: LocalDate?,
     val animalZipcode: String,
     val breedName: String?,
+    val animalDescription: String?,
     val photos: List<String>,
 )
