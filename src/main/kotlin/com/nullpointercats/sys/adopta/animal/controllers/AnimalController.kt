@@ -24,14 +24,13 @@ import org.springframework.web.bind.annotation.RequestAttribute
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
-import org.springframework.web.bind.annotation.GetMapping       
-import org.springframework.web.bind.annotation.RequestParam    
+import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.RequestParam
 import kotlin.jvm.java
 
 /**
  * REST Controller for managing animal-related operations.
- * */
-
+ */
 @RestController
 @RequestMapping("/animals")
 class AnimalController {
@@ -45,9 +44,7 @@ class AnimalController {
 
     /**
      * Endpoint to register a new animal in the system.
-     *
-     * URL:    http://localhost:8080/animals/register
-     * Method: POST
+     * URL: POST http://localhost:8080/animals/register
      */
     @PostMapping("/register")
     fun addAnimal(
@@ -55,7 +52,7 @@ class AnimalController {
         @RequestAttribute("authenticatedUser") userFound: User
     ): ResponseEntity<AnimalRegisterResponse> {
 
-        logger.info("[animals/register] [ATTEMPT] Attempting new animal registration with from ${userFound.email}")
+        logger.info("[animals/register] [ATTEMPT] Attempting new animal registration from ${userFound.email}")
 
         val animalDomain = request.toDomain(userFound, null)
 
@@ -71,23 +68,14 @@ class AnimalController {
             return ResponseEntity.status(409).build()
         }
 
-        logger.info("[animals/register] [SUCCESS] Animal registered successfully ")
+        logger.info("[animals/register] [SUCCESS] Animal registered successfully")
         return ResponseEntity.ok(animalSaved.toResponse())
     }
 
     /**
-    * Endpoint to search animals available for adoption using optional filters.
-    *
-    * URL:    GET http://localhost:8080/animals
-    * Params (all optional):
-    *   species  → DOG | CAT
-    *   size     → small | medium | large | extra_large
-    *   zipcode  → e.g. 06600
-    *   breedId  → numeric breed ID
-    *
-    * Returns an empty list when no animals match — never 404.
-    */
-
+     * Endpoint to search animals available for adoption using optional filters.
+     * URL: GET http://localhost:8080/animals
+     */
     @GetMapping
     fun searchAnimals(
         @RequestParam(required = false) species: String?,
@@ -100,7 +88,7 @@ class AnimalController {
         logger.info(
             "[GET /animals] [ATTEMPT] From ${userFound.email} " +
             "— species=$species size=$size zipcode=$zipcode breedName=$breedName"
-            )
+        )
 
         val results = animalService.searchAnimals(species, size, zipcode, breedName).map { it.toSearchResponse() }
 
@@ -109,14 +97,8 @@ class AnimalController {
     }
 
     /**
-     * Endpoint to search for a specific animal by its id.
-     *
-     * URL:     http://localhost:8080/animals/{id}
-     * Method:  GET
-     *
-     * @param id The unique identifier of the animal.
-     * @throws NoSuchElementException if no animal is found
-     * and returns a 404 error.
+     * Endpoint to get a specific animal by its id.
+     * URL: GET http://localhost:8080/animals/{id}
      */
     @GetMapping("/{id}")
     fun getAnimalInfo(
@@ -127,22 +109,9 @@ class AnimalController {
         logger.info("[GET /animals/$id] [ATTEMPT] User ${userFound.email} is viewing pet $id")
 
         val animal = animalService.getAnimalById(id)
-
-        val response = AnimalSearchResponse(
-            idAnimal = animal.idAnimal,
-            animalName = animal.animalName,
-            species = animal.species,
-            size = animal.size,
-            description = animal.description,
-            dateOfBirth = animal.dateOfBirth,
-            animalZipcode = animal.animalZipcode,
-            publishedAt = animal.publishedAt,
-            breedName = animal.breed?.breedName,
-            photos = animal.photos.map { it.url }
-        )
-
+        
         logger.info("[GET /animals/$id] [SUCCESS] Animal ${animal.animalName} found")
-        return ResponseEntity.ok(response)
+        return ResponseEntity.ok(animal.toSearchResponse())
     }
 
     @PutMapping("/{id}")
@@ -158,11 +127,10 @@ class AnimalController {
 
         if (updated == null) {
             logger.warn("[animals/update] [FAILED] Could not update animal $id for ${userFound.email}")
-            return ResponseEntity.status(409).build<AnimalUpdateResponse>()
+            return ResponseEntity.status(409).build()
         }
 
         logger.info("[animals/update] [SUCCESS] Animal $id updated")
         return ResponseEntity.ok(updated.toUpdateResponse())
     }
-
 }

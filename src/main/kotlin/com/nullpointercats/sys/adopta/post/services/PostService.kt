@@ -82,7 +82,8 @@ class PostService {
             null
         }
     }
-    //to get the post for the home feed
+    
+    /** Returns all posts in the system (public feed). */
     fun getAllPosts(): List<Post> {
         return try {
             postRepository.findAll().map { it.toDomain() }
@@ -92,6 +93,21 @@ class PostService {
         }
     }
 
+    /**
+     * Returns only the posts whose animal belongs to [userId].
+     * Filters in-memory from the full list to avoid adding a custom
+     * query to the repository for now.
+     */
+    fun getPostsByUser(userId: Int): List<Post> {
+        return try {
+            postRepository.findAll()
+                .filter { it.animal.user.id == userId }
+                .map    { it.toDomain() }
+        } catch (e: Exception) {
+            logger.error("Error fetching posts for user $userId: ${e.message}")
+            emptyList()
+        }
+    }   
 
 
 }
