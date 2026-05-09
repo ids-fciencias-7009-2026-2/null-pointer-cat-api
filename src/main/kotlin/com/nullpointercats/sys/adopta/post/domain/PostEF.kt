@@ -8,6 +8,7 @@ import com.nullpointercats.sys.adopta.post.dto.request.PostUpdateRequest
 import com.nullpointercats.sys.adopta.post.dto.response.PostUpdateResponse
 import com.nullpointercats.sys.adopta.post.dto.response.PostFeedResponse
 import com.nullpointercats.sys.adopta.post.entities.PostEntity
+import com.nullpointercats.sys.adopta.user.domain.User
 import java.time.LocalDateTime
 
 fun Post.toResponse() : PostRegisterResponse{
@@ -61,6 +62,8 @@ fun Post.toUpdateResponse(): PostUpdateResponse {
 }
 
 fun Post.toFeedResponse(): PostFeedResponse {
+    val animal: Animal = this.animal!!
+    val publisher: User = animal.publisher
     return PostFeedResponse(
         idPost        = this.idPost!!,
         description   = this.description,
