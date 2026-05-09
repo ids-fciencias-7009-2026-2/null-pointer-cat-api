@@ -17,5 +17,11 @@ data class AnimalRegisterRequest (
     val publishedAt: LocalDateTime? = LocalDateTime.now(),
 
     val breedId: Int? = null,
-    val photosURLs: List<String>
+    val photos: List<PhotoRegisterRequest> = emptyList()
+)
+
+data class PhotoRegisterRequest (
+    var url : String,
+    var width : Int ?= null,
+    var height : Int ?= null,
 )

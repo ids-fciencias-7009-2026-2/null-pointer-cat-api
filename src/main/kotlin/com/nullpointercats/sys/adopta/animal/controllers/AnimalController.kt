@@ -22,7 +22,6 @@ import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestAttribute
 import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestHeader
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.bind.annotation.GetMapping       
@@ -59,6 +58,12 @@ class AnimalController {
         logger.info("[animals/register] [ATTEMPT] Attempting new animal registration with from ${userFound.email}")
 
         val animalDomain = request.toDomain(userFound, null)
+
+        if (animalDomain.photos.isEmpty()) {
+            logger.warn("[animals/register] No photos to add. We need at least one photo.")
+            return ResponseEntity.status(409).build()
+        }
+
         val animalSaved = animalService.addNewAnimal(animalDomain, request.breedId)
 
         if (animalSaved == null) {

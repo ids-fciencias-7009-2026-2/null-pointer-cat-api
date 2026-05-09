@@ -47,7 +47,6 @@ class AnimalService {
             return null
         }
         val userEntity = userEntityOptional.get()
-
         val breedEntity = breedId?.let { breedRepository.findById(it).orElse(null) }
         val animalEntity = animal.toEntity(userEntity, breedEntity)
         return try {
