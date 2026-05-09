@@ -98,6 +98,21 @@ class PostController {
         return ResponseEntity.ok(posts)
     }
 
-
+    /**
+     * Returns only the posts published by the authenticated user.
+     * URL: GET http://localhost:8080/post/me
+     */
+    @GetMapping("/me")
+    fun getMyPosts(
+        @RequestAttribute("authenticatedUser") userFound: User
+    ): ResponseEntity<List<PostFeedResponse>> {
+ 
+        logger.info("[GET /post/me] [ATTEMPT] My posts requested by ${userFound.email}")
+ 
+        val posts = postService.getPostsByUser(userFound.id.toInt()).map { it.toFeedResponse() }
+ 
+        logger.info("[GET /post/me] [SUCCESS] ${posts.size} posts returned for ${userFound.email}")
+        return ResponseEntity.ok(posts)
+    }
 
 }

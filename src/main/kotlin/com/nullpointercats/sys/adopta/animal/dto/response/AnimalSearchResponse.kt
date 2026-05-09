@@ -17,5 +17,8 @@ data class AnimalSearchResponse(
     val animalZipcode: String,
     val publishedAt: LocalDateTime?,
     val breedName: String?,
-    val photos: List<String>
+    val photos: List<String>,
+    val publisherUsername: String,
+    val publisherFirstname: String,
+    val publisherLastname: String,
 )

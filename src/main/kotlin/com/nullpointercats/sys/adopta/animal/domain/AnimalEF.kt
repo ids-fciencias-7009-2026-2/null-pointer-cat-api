@@ -76,7 +76,10 @@ fun Animal.toSearchResponse(): AnimalSearchResponse {
         animalZipcode = this.animalZipcode,
         publishedAt   = this.publishedAt,
         breedName     = this.breed?.breedName,
-        photos        = this.photos.map { it.url }
+        photos        = this.photos.map { it.url },
+        publisherUsername  = this.publisher.username,
+        publisherFirstname = this.publisher.firstname,
+        publisherLastname  = this.publisher.lastname,
     )
 }
 
@@ -89,8 +92,7 @@ fun Animal.toUpdateResponse(): AnimalUpdateResponse {
         dateOfBirth   = this.dateOfBirth,
         size          = this.size,
         animalZipcode = this.animalZipcode,
-        publishedAt   = this.publishedAt,
-        breedName     = this.breed?.breedName
+        publishedAt   = this.publishedAt
     )
 }
 
