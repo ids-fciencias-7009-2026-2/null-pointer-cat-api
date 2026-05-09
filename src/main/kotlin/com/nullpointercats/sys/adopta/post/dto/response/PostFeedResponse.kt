@@ -19,6 +19,7 @@ data class PostFeedResponse(
     val publisherUsername: String,
     val publisherFirstname: String,
     val publisherLastname: String,
+    val publisherId: Int,
 
     val idAnimal: Int,
     val animalName: String,

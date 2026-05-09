@@ -73,6 +73,7 @@ fun Post.toFeedResponse(): PostFeedResponse {
         publisherUsername  = publisher.username,
         publisherFirstname = publisher.firstname,
         publisherLastname  = publisher.lastname,
+        publisherId       = this.animal!!.publisher.id.toInt()!!,
 
         idAnimal      = this.animal!!.idAnimal!!,
         animalName    = this.animal.animalName,
