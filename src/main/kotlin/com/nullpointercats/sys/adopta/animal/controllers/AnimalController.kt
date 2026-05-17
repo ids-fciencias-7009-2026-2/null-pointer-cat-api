@@ -3,6 +3,7 @@ package com.nullpointercats.sys.adopta.animal.controllers
 import com.nullpointercats.sys.adopta.animal.domain.Animal
 import com.nullpointercats.sys.adopta.animal.domain.toDomain
 import com.nullpointercats.sys.adopta.animal.domain.toResponse
+import com.nullpointercats.sys.adopta.animal.domain.toSimpleResponse
 import com.nullpointercats.sys.adopta.animal.domain.toSearchResponse
 import com.nullpointercats.sys.adopta.animal.dto.request.AnimalRegisterRequest
 import com.nullpointercats.sys.adopta.animal.dto.response.AnimalRegisterResponse
@@ -12,6 +13,7 @@ import com.nullpointercats.sys.adopta.user.domain.User
 import com.nullpointercats.sys.adopta.user.services.UserService
 import com.nullpointercats.sys.adopta.animal.domain.toUpdateResponse
 import com.nullpointercats.sys.adopta.animal.dto.request.AnimalUpdateRequest
+import com.nullpointercats.sys.adopta.animal.dto.response.AnimalResponse
 import com.nullpointercats.sys.adopta.animal.dto.response.AnimalUpdateResponse
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PutMapping
@@ -24,13 +26,14 @@ import org.springframework.web.bind.annotation.RequestAttribute
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.RequestParam
+import org.springframework.web.bind.annotation.GetMapping       
+import org.springframework.web.bind.annotation.RequestParam    
 import kotlin.jvm.java
 
 /**
  * REST Controller for managing animal-related operations.
- */
+ * */
+
 @RestController
 @RequestMapping("/animals")
 class AnimalController {
@@ -44,7 +47,9 @@ class AnimalController {
 
     /**
      * Endpoint to register a new animal in the system.
-     * URL: POST http://localhost:8080/animals/register
+     *
+     * URL:    http://localhost:8080/animals/register
+     * Method: POST
      */
     @PostMapping("/register")
     fun addAnimal(
@@ -52,7 +57,7 @@ class AnimalController {
         @RequestAttribute("authenticatedUser") userFound: User
     ): ResponseEntity<AnimalRegisterResponse> {
 
-        logger.info("[animals/register] [ATTEMPT] Attempting new animal registration from ${userFound.email}")
+        logger.info("[animals/register] [ATTEMPT] Attempting new animal registration with from ${userFound.email}")
 
         val animalDomain = request.toDomain(userFound, null)
 
@@ -68,14 +73,23 @@ class AnimalController {
             return ResponseEntity.status(409).build()
         }
 
-        logger.info("[animals/register] [SUCCESS] Animal registered successfully")
+        logger.info("[animals/register] [SUCCESS] Animal registered successfully ")
         return ResponseEntity.ok(animalSaved.toResponse())
     }
 
     /**
-     * Endpoint to search animals available for adoption using optional filters.
-     * URL: GET http://localhost:8080/animals
-     */
+    * Endpoint to search animals available for adoption using optional filters.
+    *
+    * URL:    GET http://localhost:8080/animals
+    * Params (all optional):
+    *   species  → DOG | CAT
+    *   size     → small | medium | large | extra_large
+    *   zipcode  → e.g. 06600
+    *   breedId  → numeric breed ID
+    *
+    * Returns an empty list when no animals match — never 404.
+    */
+
     @GetMapping
     fun searchAnimals(
         @RequestParam(required = false) species: String?,
@@ -88,7 +102,7 @@ class AnimalController {
         logger.info(
             "[GET /animals] [ATTEMPT] From ${userFound.email} " +
             "— species=$species size=$size zipcode=$zipcode breedName=$breedName"
-        )
+            )
 
         val results = animalService.searchAnimals(species, size, zipcode, breedName).map { it.toSearchResponse() }
 
@@ -97,8 +111,14 @@ class AnimalController {
     }
 
     /**
-     * Endpoint to get a specific animal by its id.
-     * URL: GET http://localhost:8080/animals/{id}
+     * Endpoint to search for a specific animal by its id.
+     *
+     * URL:     http://localhost:8080/animals/{id}
+     * Method:  GET
+     *
+     * @param id The unique identifier of the animal.
+     * @throws NoSuchElementException if no animal is found
+     * and returns a 404 error.
      */
     @GetMapping("/{id}")
     fun getAnimalInfo(
@@ -109,9 +129,22 @@ class AnimalController {
         logger.info("[GET /animals/$id] [ATTEMPT] User ${userFound.email} is viewing pet $id")
 
         val animal = animalService.getAnimalById(id)
-        
+
+        val response = AnimalSearchResponse(
+            idAnimal = animal.idAnimal,
+            animalName = animal.animalName,
+            species = animal.species,
+            size = animal.size,
+            description = animal.description,
+            dateOfBirth = animal.dateOfBirth,
+            animalZipcode = animal.animalZipcode,
+            publishedAt = animal.publishedAt,
+            breedName = animal.breed?.breedName,
+            photos = animal.photos.map { it.url }
+        )
+
         logger.info("[GET /animals/$id] [SUCCESS] Animal ${animal.animalName} found")
-        return ResponseEntity.ok(animal.toSearchResponse())
+        return ResponseEntity.ok(response)
     }
 
     @PutMapping("/{id}")
@@ -127,10 +160,30 @@ class AnimalController {
 
         if (updated == null) {
             logger.warn("[animals/update] [FAILED] Could not update animal $id for ${userFound.email}")
-            return ResponseEntity.status(409).build()
+            return ResponseEntity.status(409).build<AnimalUpdateResponse>()
         }
 
         logger.info("[animals/update] [SUCCESS] Animal $id updated")
         return ResponseEntity.ok(updated.toUpdateResponse())
     }
+
+
+    @GetMapping("/my_animals")
+    fun getMyAnimals(
+        @RequestAttribute("authenticatedUser") userFound: User
+    ) : ResponseEntity<List<AnimalResponse>> {
+
+        logger.info("[animals/my_animals] [ATTEMPT] User ${userFound.email} request to get all its animals.")
+
+        val animals = animalService.getAnimalsFromUser(userFound.id.toInt())
+
+        if (!animals.isEmpty()) {
+            logger.info("[animals/my_animals] [SUCCESS] We got ${animals.size} animals")
+            logger.info("[animals/my_animals] [SUCCESS] We got ${animals.map { a -> a.idAnimal }} animals")
+        }
+
+        val responseList: List<AnimalResponse> = animals.map { it.toSimpleResponse() }
+        return ResponseEntity.ok(responseList)
+    }
+
 }

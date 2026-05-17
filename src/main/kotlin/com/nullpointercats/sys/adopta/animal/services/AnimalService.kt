@@ -138,5 +138,14 @@ class AnimalService {
         }
     }
 
+    fun getAnimalsFromUser(id : Int): List<Animal> {
+        return try {
+            animalRepository.findAnimalsByUserId(id).map { it.toDomain() }
+        } catch (e: Exception) {
+            logger.error("Error fetching animals: ${e.message}")
+            emptyList()
+        }
+    }
+
 }
 
