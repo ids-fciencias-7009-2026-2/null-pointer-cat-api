@@ -78,17 +78,9 @@ class AnimalController {
     }
 
     /**
-    * Endpoint to search animals available for adoption using optional filters.
-    *
-    * URL:    GET http://localhost:8080/animals
-    * Params (all optional):
-    *   species  → DOG | CAT
-    *   size     → small | medium | large | extra_large
-    *   zipcode  → e.g. 06600
-    *   breedId  → numeric breed ID
-    *
-    * Returns an empty list when no animals match — never 404.
-    */
+     * Endpoint to search animals available for adoption using optional filters.
+     * URL: GET http://localhost:8080/animals
+     */
 
     @GetMapping
     fun searchAnimals(
@@ -130,21 +122,8 @@ class AnimalController {
 
         val animal = animalService.getAnimalById(id)
 
-        val response = AnimalSearchResponse(
-            idAnimal = animal.idAnimal,
-            animalName = animal.animalName,
-            species = animal.species,
-            size = animal.size,
-            description = animal.description,
-            dateOfBirth = animal.dateOfBirth,
-            animalZipcode = animal.animalZipcode,
-            publishedAt = animal.publishedAt,
-            breedName = animal.breed?.breedName,
-            photos = animal.photos.map { it.url }
-        )
-
         logger.info("[GET /animals/$id] [SUCCESS] Animal ${animal.animalName} found")
-        return ResponseEntity.ok(response)
+        return ResponseEntity.ok(animal.toSearchResponse())
     }
 
     @PutMapping("/{id}")
@@ -160,7 +139,7 @@ class AnimalController {
 
         if (updated == null) {
             logger.warn("[animals/update] [FAILED] Could not update animal $id for ${userFound.email}")
-            return ResponseEntity.status(409).build<AnimalUpdateResponse>()
+            return ResponseEntity.status(409).build()
         }
 
         logger.info("[animals/update] [SUCCESS] Animal $id updated")
