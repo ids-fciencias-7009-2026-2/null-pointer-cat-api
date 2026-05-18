@@ -170,15 +170,15 @@ class AnimalController {
     @GetMapping("/all")
     fun getAnimals(
         @RequestAttribute("authenticatedUser") userFound: User
-    ): ResponseEntity< List<AnimalResponse> > {
+    ): ResponseEntity< List<AnimalResponse>> {
 
-        logger.info("[/animals/] [ATTEMPT] User ${userFound.email} request to get all animals post.")
+        logger.info("[/animals/all] [ATTEMPT] User ${userFound.email} request to get all animals post.")
 
         val animals = animalService.getAnimals()
 
         if (!animals.isEmpty()) {
             logger.info("[/animals/all] [SUCCESS] We got ${animals.size} animals")
-            logger.info("[animals/my_animals] [SUCCESS] We got ${animals.map { a -> a.idAnimal }} animals")
+            logger.info("[animals/all] [SUCCESS] We got ${animals.map { a -> a.idAnimal }} animals")
         }
 
         val responseList: List<AnimalResponse> = animals.map { it.toResponse() }

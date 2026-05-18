@@ -114,7 +114,7 @@ fun Animal.toResponse(): AnimalResponse {
         publisherUsername = this.publisher.username,
         publisherFirstname = this.publisher.firstname,
         publisherLastname = this.publisher.lastname,
-        publisherId = this.publisher.id
+        publisherId       = this.publisher.id.toInt(),
     )
 }
 

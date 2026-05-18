@@ -18,5 +18,5 @@ data class AnimalResponse(
     val publisherUsername: String,
     val publisherFirstname: String,
     val publisherLastname: String,
-    val publisherId: String
+    val publisherId: Int
 )
