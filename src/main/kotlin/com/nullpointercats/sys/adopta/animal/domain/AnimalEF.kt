@@ -6,6 +6,7 @@ import com.nullpointercats.sys.adopta.animal.dto.response.AnimalSearchResponse
 import com.nullpointercats.sys.adopta.animal.entities.AnimalEntity
 import com.nullpointercats.sys.adopta.animal.dto.response.AnimalUpdateResponse
 import com.nullpointercats.sys.adopta.user.domain.*
+import java.time.LocalDateTime
 
 /**
  * Converts an [AnimalRegisterRequest] DTO into an [Animal] domain model.
@@ -32,7 +33,7 @@ fun AnimalRegisterRequest.toDomain(
     )
 }
 
-fun Animal.toResponse() : AnimalRegisterResponse {
+fun Animal.toRegisterResponse() : AnimalRegisterResponse {
     return AnimalRegisterResponse(
         idAnimal = this.idAnimal,
         animalName = this.animalName,
@@ -97,10 +98,23 @@ fun Animal.toUpdateResponse(): AnimalUpdateResponse {
     )
 }
 
-fun Animal.toSimpleResponse(): AnimalResponse {
+fun Animal.toResponse(): AnimalResponse {
     return AnimalResponse(
         idAnimal = this.idAnimal ?:0,
-        animalName = this.animalName
+        animalName = this.animalName,
+        species       = this.species,
+        dateOfBirth   = this.dateOfBirth,
+        size           = this.size,
+        animalZipcode = this.animalZipcode,
+        breedName = this.breed?.breedName,
+        photos        = this.photos.map { it.url },
+        createdAt = this.publishedAt ?: LocalDateTime.now(),
+        animalDescription = this.description,
+
+        publisherUsername = this.publisher.username,
+        publisherFirstname = this.publisher.firstname,
+        publisherLastname = this.publisher.lastname,
+        publisherId = this.publisher.id
     )
 }
 

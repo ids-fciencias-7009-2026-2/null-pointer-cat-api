@@ -22,3 +22,4 @@ data class AnimalSearchResponse(
     val publisherFirstname: String ?="",
     val publisherLastname: String ? ="",
 )
+

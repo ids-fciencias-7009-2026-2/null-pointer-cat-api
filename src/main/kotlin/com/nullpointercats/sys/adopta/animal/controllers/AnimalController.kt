@@ -2,8 +2,8 @@ package com.nullpointercats.sys.adopta.animal.controllers
 
 import com.nullpointercats.sys.adopta.animal.domain.Animal
 import com.nullpointercats.sys.adopta.animal.domain.toDomain
+import com.nullpointercats.sys.adopta.animal.domain.toRegisterResponse
 import com.nullpointercats.sys.adopta.animal.domain.toResponse
-import com.nullpointercats.sys.adopta.animal.domain.toSimpleResponse
 import com.nullpointercats.sys.adopta.animal.domain.toSearchResponse
 import com.nullpointercats.sys.adopta.animal.dto.request.AnimalRegisterRequest
 import com.nullpointercats.sys.adopta.animal.dto.response.AnimalRegisterResponse
@@ -74,7 +74,7 @@ class AnimalController {
         }
 
         logger.info("[animals/register] [SUCCESS] Animal registered successfully ")
-        return ResponseEntity.ok(animalSaved.toResponse())
+        return ResponseEntity.ok(animalSaved.toRegisterResponse())
     }
 
     /**
@@ -167,6 +167,23 @@ class AnimalController {
         return ResponseEntity.ok(updated.toUpdateResponse())
     }
 
+    @GetMapping("/all")
+    fun getAnimals(
+        @RequestAttribute("authenticatedUser") userFound: User
+    ): ResponseEntity< List<AnimalResponse> > {
+
+        logger.info("[/animals/] [ATTEMPT] User ${userFound.email} request to get all animals post.")
+
+        val animals = animalService.getAnimals()
+
+        if (!animals.isEmpty()) {
+            logger.info("[/animals/all] [SUCCESS] We got ${animals.size} animals")
+            logger.info("[animals/my_animals] [SUCCESS] We got ${animals.map { a -> a.idAnimal }} animals")
+        }
+
+        val responseList: List<AnimalResponse> = animals.map { it.toResponse() }
+        return ResponseEntity.ok(responseList)
+    }
 
     @GetMapping("/my_animals")
     fun getMyAnimals(
@@ -182,7 +199,7 @@ class AnimalController {
             logger.info("[animals/my_animals] [SUCCESS] We got ${animals.map { a -> a.idAnimal }} animals")
         }
 
-        val responseList: List<AnimalResponse> = animals.map { it.toSimpleResponse() }
+        val responseList: List<AnimalResponse> = animals.map { it.toResponse() }
         return ResponseEntity.ok(responseList)
     }
 
