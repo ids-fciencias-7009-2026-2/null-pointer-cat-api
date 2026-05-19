@@ -5,6 +5,7 @@ import com.nullpointercats.sys.adopta.animal.dto.response.AnimalResponse
 import com.nullpointercats.sys.adopta.animal.dto.response.AnimalSearchResponse
 import com.nullpointercats.sys.adopta.animal.entities.AnimalEntity
 import com.nullpointercats.sys.adopta.animal.dto.response.AnimalUpdateResponse
+import com.nullpointercats.sys.adopta.animal.dto.response.AnimalDeleteResponse
 import com.nullpointercats.sys.adopta.user.domain.*
 import java.time.LocalDateTime
 
@@ -115,6 +116,18 @@ fun Animal.toResponse(): AnimalResponse {
         publisherFirstname = this.publisher.firstname,
         publisherLastname = this.publisher.lastname,
         publisherId       = this.publisher.id.toInt(),
+    )
+}
+
+/**
+ * Builds the response returned after an animal post is deleted.
+ */
+fun Animal.toDeleteResponse(): AnimalDeleteResponse {
+    return AnimalDeleteResponse(
+        idAnimal   = this.idAnimal,
+        animalName = this.animalName,
+        deletedAt  = LocalDateTime.now(),
+        message    = "Animal deleted successfully"
     )
 }
 

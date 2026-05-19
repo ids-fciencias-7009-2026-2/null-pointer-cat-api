@@ -156,5 +156,38 @@ class AnimalService {
         }
     }
 
+    /**
+     * Deletes an animal post owned by the requesting user.
+     *
+     * Returns the deleted animal  or null when the animal does not exist or the requester is
+     * not its publisher.
+     */
+    @Transactional
+    fun deleteAnimal(animalId: Int, userId: Int): Animal? {
+
+        val animalEntityOptional = animalRepository.findById(animalId)
+        if (animalEntityOptional.isEmpty) {
+            logger.warn("Attempt to delete non-existing animal: $animalId")
+            return null
+        }
+        val animalEntity = animalEntityOptional.get()
+
+        if (animalEntity.user.id?.toLong() != userId.toLong()) {
+            logger.warn("User $userId tried to delete animal $animalId owned by another user")
+            return null
+        }
+
+        val snapshot = animalEntity.toDomain()
+
+        return try {
+            animalRepository.delete(animalEntity)
+            logger.info("Animal $animalId deleted successfully (photos + favorites cascaded)")
+            snapshot
+        } catch (e: Exception) {
+            logger.error("Error deleting animal $animalId: ${e.message}")
+            null
+        }
+    }
+
 }
 
