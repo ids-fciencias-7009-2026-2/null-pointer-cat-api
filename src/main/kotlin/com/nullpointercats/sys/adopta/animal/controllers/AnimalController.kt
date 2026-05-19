@@ -12,9 +12,12 @@ import com.nullpointercats.sys.adopta.animal.services.AnimalService
 import com.nullpointercats.sys.adopta.user.domain.User
 import com.nullpointercats.sys.adopta.user.services.UserService
 import com.nullpointercats.sys.adopta.animal.domain.toUpdateResponse
+import com.nullpointercats.sys.adopta.animal.domain.toDeleteResponse
 import com.nullpointercats.sys.adopta.animal.dto.request.AnimalUpdateRequest
 import com.nullpointercats.sys.adopta.animal.dto.response.AnimalResponse
 import com.nullpointercats.sys.adopta.animal.dto.response.AnimalUpdateResponse
+import com.nullpointercats.sys.adopta.animal.dto.response.AnimalDeleteResponse
+import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PutMapping
 import org.slf4j.Logger
@@ -180,6 +183,38 @@ class AnimalController {
 
         val responseList: List<AnimalResponse> = animals.map { it.toResponse() }
         return ResponseEntity.ok(responseList)
+    }
+
+    /**
+     * Endpoint to delete an animal post.
+     *
+     * URL:    http://localhost:8080/animals/{id}
+     * Method: DELETE
+     *
+     * Only the publisher (owner) can delete their own animal.
+     * On success the related photos and favorites are removed via
+     * JPA + DB cascade rules.
+     *
+     * @return 200 OK with the deleted animal payload,
+     *         409 if the animal does not exist or the user is not the owner.
+     */
+    @DeleteMapping("/{id}")
+    fun deleteAnimal(
+        @PathVariable id: Int,
+        @RequestAttribute("authenticatedUser") userFound: User
+    ): ResponseEntity<AnimalDeleteResponse> {
+
+        logger.info("[animals/delete] [ATTEMPT] User ${userFound.email} deleting animal $id")
+
+        val deleted = animalService.deleteAnimal(id, userFound.id.toInt())
+
+        if (deleted == null) {
+            logger.warn("[animals/delete] [FAILED] Could not delete animal $id for ${userFound.email}")
+            return ResponseEntity.status(409).build()
+        }
+
+        logger.info("[animals/delete] [SUCCESS] Animal $id deleted")
+        return ResponseEntity.ok(deleted.toDeleteResponse())
     }
 
 }
