@@ -1,5 +1,7 @@
 package com.nullpointercats.sys.adopta.favorite.services
 
+import com.nullpointercats.sys.adopta.animal.domain.Animal
+import com.nullpointercats.sys.adopta.animal.domain.toDomain
 import com.nullpointercats.sys.adopta.animal.repositories.AnimalRepository
 import com.nullpointercats.sys.adopta.favorite.domain.Favorite
 import com.nullpointercats.sys.adopta.favorite.domain.toDomain
@@ -105,4 +107,14 @@ class FavoriteService {
             logger.error("Error sending email: ${e.message}")
         }
     }
+
+    fun getFavoritesByUser(userId: Int): List<Animal> {
+        return try {
+            favoriteRepository.findByUserId(userId).map { it.animal.toDomain() }
+        } catch (e: Exception) {
+            logger.error("Error fetching favorites for user $userId: ${e.message}")
+            emptyList()
+        }
+    }
+
 }
