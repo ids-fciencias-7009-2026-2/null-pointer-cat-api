@@ -1,5 +1,7 @@
 package com.nullpointercats.sys.adopta.favorite.controllers
 
+import com.nullpointercats.sys.adopta.animal.domain.toResponse
+import com.nullpointercats.sys.adopta.animal.dto.response.AnimalResponse
 import com.nullpointercats.sys.adopta.favorite.dto.response.FavoriteResponse
 import com.nullpointercats.sys.adopta.favorite.services.FavoriteService
 import com.nullpointercats.sys.adopta.user.domain.User
@@ -39,5 +41,14 @@ class FavoriteController {
                 savedAt = favorite.savedAt
             )
         )
+    }
+
+    @GetMapping("/me")
+    fun getMyFavorites(
+        @RequestAttribute("authenticatedUser") userFound: User
+    ): ResponseEntity<List<AnimalResponse>> {
+        logger.info("[GET /favorites/me] User ${userFound.email} fetching their favorites")
+        val animals = favoriteService.getFavoritesByUser(userFound.id.toInt())
+        return ResponseEntity.ok(animals.map { it.toResponse() })
     }
 }
