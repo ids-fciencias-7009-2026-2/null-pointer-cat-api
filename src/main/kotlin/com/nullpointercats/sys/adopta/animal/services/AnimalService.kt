@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import kotlin.text.get
+import com.nullpointercats.sys.adopta.favorite.repositories.FavoriteRepository
 
 /**
  * Service layer responsible for executing business logic related to animals.
@@ -31,6 +32,9 @@ class AnimalService {
 
     @Autowired
     lateinit var userRepository: UserRepository
+
+    @Autowired
+    lateinit var favoriteRepository: FavoriteRepository
 
 
     val logger = LoggerFactory.getLogger(UserService::class.java)
@@ -180,8 +184,10 @@ class AnimalService {
         val snapshot = animalEntity.toDomain()
 
         return try {
+            val removedFavorites = favoriteRepository.deleteByAnimalId(animalId)
+            logger.info("Removed $removedFavorites favorite(s) referencing animal $animalId")
             animalRepository.delete(animalEntity)
-            logger.info("Animal $animalId deleted successfully (photos + favorites cascaded)")
+            logger.info("Animal $animalId deleted successfully")
             snapshot
         } catch (e: Exception) {
             logger.error("Error deleting animal $animalId: ${e.message}")
