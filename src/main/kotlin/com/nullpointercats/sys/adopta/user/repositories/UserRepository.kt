@@ -63,4 +63,7 @@ interface UserRepository : CrudRepository<UserEntity, Int> {
     @Transactional
     @Query("update UserEntity u set u.token = null where u.token = :token")
     fun clearTokenByToken(token: String)
+
+    @Query("select u from UserEntity u where u.resetToken = :token")
+    fun findByResetToken(token: String): UserEntity?
 }
