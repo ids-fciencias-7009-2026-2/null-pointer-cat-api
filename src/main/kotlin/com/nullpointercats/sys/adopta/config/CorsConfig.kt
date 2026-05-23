@@ -38,6 +38,6 @@ class CorsConfig (private val authInterceptor: AuthInterceptor) : WebMvcConfigur
     override fun addInterceptors(registry: InterceptorRegistry) {
         registry.addInterceptor(authInterceptor)
             .addPathPatterns("/**")
-            .excludePathPatterns("/users/login", "/users/register", "/photos/upload","/photos/**")
+            .excludePathPatterns("/users/login", "/users/register")
     }
 }
