@@ -6,6 +6,7 @@ import com.nullpointercats.sys.adopta.animal.dto.response.AnimalSearchResponse
 import com.nullpointercats.sys.adopta.animal.entities.AnimalEntity
 import com.nullpointercats.sys.adopta.animal.dto.response.AnimalUpdateResponse
 import com.nullpointercats.sys.adopta.animal.dto.response.AnimalDeleteResponse
+import com.nullpointercats.sys.adopta.animal.dto.response.AnimalLocationResponse
 import com.nullpointercats.sys.adopta.user.domain.*
 import java.time.LocalDateTime
 
@@ -130,4 +131,15 @@ fun Animal.toDeleteResponse(): AnimalDeleteResponse {
         message    = "Animal deleted successfully"
     )
 }
+
+/**
+ * Maps an [Animal] domain object to an [AnimalLocationResponse],
+ * returning only id, name, species and zipcode.
+ */
+fun Animal.toLocationResponse() = AnimalLocationResponse(
+    animalId   = idAnimal!!,
+    animalName = animalName,
+    species    = species,
+    animalZipcode = animalZipcode
+)
 

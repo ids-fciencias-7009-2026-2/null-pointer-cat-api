@@ -5,6 +5,7 @@ import com.nullpointercats.sys.adopta.animal.domain.toDomain
 import com.nullpointercats.sys.adopta.animal.domain.toRegisterResponse
 import com.nullpointercats.sys.adopta.animal.domain.toResponse
 import com.nullpointercats.sys.adopta.animal.domain.toSearchResponse
+import com.nullpointercats.sys.adopta.animal.domain.toLocationResponse
 import com.nullpointercats.sys.adopta.animal.dto.request.AnimalRegisterRequest
 import com.nullpointercats.sys.adopta.animal.dto.response.AnimalRegisterResponse
 import com.nullpointercats.sys.adopta.animal.dto.response.AnimalSearchResponse
@@ -17,6 +18,7 @@ import com.nullpointercats.sys.adopta.animal.dto.request.AnimalUpdateRequest
 import com.nullpointercats.sys.adopta.animal.dto.response.AnimalResponse
 import com.nullpointercats.sys.adopta.animal.dto.response.AnimalUpdateResponse
 import com.nullpointercats.sys.adopta.animal.dto.response.AnimalDeleteResponse
+import com.nullpointercats.sys.adopta.animal.dto.response.AnimalLocationResponse
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PutMapping
@@ -215,6 +217,19 @@ class AnimalController {
 
         logger.info("[animals/delete] [SUCCESS] Animal $id deleted")
         return ResponseEntity.ok(deleted.toDeleteResponse())
+    }
+
+
+    @GetMapping("/locations")
+    fun getAnimalLocations(
+        @RequestAttribute("authenticatedUser") userFound: User
+    ): ResponseEntity<List<AnimalLocationResponse>> {
+        logger.info("[GET /animals/locations] [ATTEMPT] User ${userFound.email} requesting animal locations")
+
+        val locations = animalService.getAnimals().map { it.toLocationResponse() }
+
+        logger.info("[GET /animals/locations] [SUCCESS] ${locations.size} locations returned")
+        return ResponseEntity.ok(locations)
     }
 
 }
