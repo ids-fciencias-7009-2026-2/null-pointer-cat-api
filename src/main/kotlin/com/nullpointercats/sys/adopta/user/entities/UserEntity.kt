@@ -52,5 +52,12 @@ class UserEntity(
 
     /** Authetification token. Optional*/
     @Column(name = "token")
-    var token: String? = null
+    var token: String? = null,
+
+    @Column(name = "reset_token")
+    var resetToken: String? = null,
+
+    @Column(name = "reset_token_expiry")
+    var resetTokenExpiry: java.time.LocalDateTime? = null
+
 )
