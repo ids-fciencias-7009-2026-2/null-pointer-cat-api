@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 data class ExternalBreedDto(
-    val id: Int,
+    val id: String,
     val name: String,
     val origin: String? = null,
     val temperament: String? = null,

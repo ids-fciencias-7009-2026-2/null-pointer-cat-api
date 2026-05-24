@@ -6,6 +6,7 @@ import org.springframework.core.ParameterizedTypeReference
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpMethod
+import org.springframework.http.MediaType
 import org.springframework.stereotype.Component
 import org.springframework.web.client.RestTemplate
 
@@ -27,22 +28,27 @@ class ExternalPetApiClient {
     private val restTemplate = RestTemplate()
 
     fun fetchBreedsFromExternalApi(species: String): List<ExternalBreedDto> {
-        val (url, key) = when (species.uppercase()) {
-            "DOG" -> Pair("${dogApiUrl}/breeds", dogApiKey) // Usa llaves de interpolación seguras
-            "CAT" -> Pair("${catApiUrl}/breeds", catApiKey)
+        val (url, apiKey) = when (species.uppercase()) {
+            "DOG" -> Pair(dogApiUrl, dogApiKey)
+            "CAT" -> Pair(catApiUrl, catApiKey)
             else -> return emptyList()
         }
 
-        val headers = HttpHeaders()
-        // Forma obligatoria en la que la API pide la llave.
-        headers.set("x-api-key", key)
-        val entity = HttpEntity<Void>(headers)
+        val finalUrl = "$url/breeds"
 
         return try {
+            val headers = HttpHeaders()
+            headers.set("x-api-key", apiKey)
+            headers.accept = listOf(MediaType.APPLICATION_JSON)
+
+            val entity = HttpEntity<String>(headers)
             val responseType = object : ParameterizedTypeReference<List<ExternalBreedDto>>() {}
-            val response = restTemplate.exchange(url, HttpMethod.GET, entity, responseType)
+
+            val response = restTemplate.exchange(finalUrl, HttpMethod.GET, entity, responseType)
+
             response.body ?: emptyList()
         } catch (e: Exception) {
+            println("ERROR FETCHING EXTERNAL BREEDS FOR $species: ${e.message}")
             emptyList()
         }
     }

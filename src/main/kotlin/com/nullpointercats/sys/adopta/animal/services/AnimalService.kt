@@ -53,7 +53,7 @@ class AnimalService {
                 breedEntity = localBreed.get()
             } else {
                 val externalBreeds = externalPetApiClient.fetchBreedsFromExternalApi(animal.species)
-                val matchingExternal = externalBreeds.find { it.id == breedId }
+                val matchingExternal = externalBreeds.find { it.id == breedId.toString() }
 
                 if (matchingExternal != null) {
                     val existingLocalBreed = breedRepository.findByBreedName(matchingExternal.name)
