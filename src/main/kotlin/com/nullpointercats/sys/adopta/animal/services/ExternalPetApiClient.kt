@@ -28,8 +28,8 @@ class ExternalPetApiClient {
 
     fun fetchBreedsFromExternalApi(species: String): List<ExternalBreedDto> {
         val (url, key) = when (species.uppercase()) {
-            "DOG" -> Pair("\$dogApiUrl/breeds", dogApiKey)
-            "CAT" -> Pair("\$catApiUrl/breeds", catApiKey)
+            "DOG" -> Pair("${dogApiUrl}/breeds", dogApiKey) // Usa llaves de interpolación seguras
+            "CAT" -> Pair("${catApiUrl}/breeds", catApiKey)
             else -> return emptyList()
         }
 
