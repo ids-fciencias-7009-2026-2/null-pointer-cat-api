@@ -165,4 +165,24 @@ class UserController {
         val token = UUID.randomUUID().toString()
         return token
     }
+
+    @PostMapping("/forgot-password")
+    fun forgotPassword(@RequestBody body: Map<String, String>): ResponseEntity<Any> {
+        val email = body["email"] ?: return ResponseEntity.badRequest().build()
+        logger.info("[users/forgot-password] Request for $email")
+        userService.forgotPassword(email) // siempre 200 para no revelar si el email existe
+        return ResponseEntity.ok(mapOf("message" to "If that email is registered, a reset link has been sent."))
+    }
+
+    @PostMapping("/reset-password")
+    fun resetPassword(@RequestBody body: Map<String, String>): ResponseEntity<Any> {
+        val token = body["token"] ?: return ResponseEntity.badRequest().build()
+        val newPassword = body["newPassword"] ?: return ResponseEntity.badRequest().build()
+        logger.info("[users/reset-password] Attempting reset")
+        val success = userService.resetPassword(token, newPassword)
+        return if (success)
+            ResponseEntity.ok(mapOf("message" to "Password updated successfully."))
+        else
+            ResponseEntity.status(400).body(mapOf("message" to "Invalid or expired link."))
+    }
 }
