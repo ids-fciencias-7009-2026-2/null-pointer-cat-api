@@ -44,33 +44,31 @@ class AnimalService {
      * Manage the registration of a new animal.
      */
     @Transactional
-    fun addNewAnimal(animal : Animal, breedId : Int?): Animal ? {
+    fun addNewAnimal(animal : Animal, breedId : String?): Animal ? {
         var breedEntity: BreedEntity? = null
 
         if (breedId != null) {
-            val localBreed = breedRepository.findById(breedId)
-            if (localBreed.isPresent) {
-                breedEntity = localBreed.get()
-            } else {
-                val externalBreeds = externalPetApiClient.fetchBreedsFromExternalApi(animal.species)
-                val matchingExternal = externalBreeds.find { it.id == breedId.toString() }
+            val externalBreeds = externalPetApiClient.fetchBreedsFromExternalApi(animal.species)
 
-                if (matchingExternal != null) {
-                    val existingLocalBreed = breedRepository.findByBreedName(matchingExternal.name)
+            val matchingExternal = externalBreeds.find { it.id == breedId }
 
-                    if (existingLocalBreed != null) {
-                        breedEntity = existingLocalBreed
-                        logger.info("Breed ${matchingExternal.name} found locally. No internet call needed.")
-                    } else {
-                        val newBreed = BreedEntity(
-                            breedName = matchingExternal.name,
-                            origin = matchingExternal.origin,
-                            temperament = matchingExternal.temperament,
-                            lifeSpan = matchingExternal.lifeSpan
-                        )
-                        breedEntity = breedRepository.save(newBreed)
-                        logger.info("Breed ${matchingExternal.name} synchronized and saved locally for the first time.")
-                    }
+            if (matchingExternal != null) {
+                val existingLocalBreed = breedRepository.findByBreedName(matchingExternal.name)
+
+                if (existingLocalBreed != null) {
+                    // Si la raza ya existe, no llamamos a la API.
+                    breedEntity = existingLocalBreed
+                    logger.info("Breed '${matchingExternal.name}' found locally.")
+                } else {
+                    // Si no existe, creamos la raza localmente.
+                    val newBreed = BreedEntity(
+                        breedName = matchingExternal.name,
+                        origin = matchingExternal.origin,
+                        temperament = matchingExternal.temperament,
+                        lifeSpan = matchingExternal.lifeSpan
+                    )
+                    breedEntity = breedRepository.save(newBreed)
+                    logger.info("Breed '${matchingExternal.name}' saved locally.")
                 }
             }
         }
