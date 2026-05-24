@@ -56,13 +56,21 @@ class AnimalService {
                 val matchingExternal = externalBreeds.find { it.id == breedId }
 
                 if (matchingExternal != null) {
-                    val newBreed = BreedEntity(
-                        breedName = matchingExternal.name,
-                        origin = matchingExternal.origin,
-                        temperament = matchingExternal.temperament,
-                        lifeSpan = matchingExternal.lifeSpan
-                    )
-                    breedEntity = breedRepository.save(newBreed)
+                    val existingLocalBreed = breedRepository.findByBreedName(matchingExternal.name)
+
+                    if (existingLocalBreed != null) {
+                        breedEntity = existingLocalBreed
+                        logger.info("Breed ${matchingExternal.name} found locally. No internet call needed.")
+                    } else {
+                        val newBreed = BreedEntity(
+                            breedName = matchingExternal.name,
+                            origin = matchingExternal.origin,
+                            temperament = matchingExternal.temperament,
+                            lifeSpan = matchingExternal.lifeSpan
+                        )
+                        breedEntity = breedRepository.save(newBreed)
+                        logger.info("Breed ${matchingExternal.name} synchronized and saved locally for the first time.")
+                    }
                 }
             }
         }

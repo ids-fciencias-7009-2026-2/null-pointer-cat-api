@@ -7,4 +7,5 @@ import org.springframework.data.repository.CrudRepository
  * Data Repository for managing [BreedEntity] persistence.
  */
 interface BreedRepository : CrudRepository<BreedEntity, Int> {
+    fun findByBreedName(breedName: String): BreedEntity?
 }
