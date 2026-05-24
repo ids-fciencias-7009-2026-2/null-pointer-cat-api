@@ -100,6 +100,27 @@ fun Animal.toUpdateResponse(): AnimalUpdateResponse {
 }
 
 fun Animal.toResponse(): AnimalResponse {
+    val localBreed = this.breed
+    val generalInfo = if (localBreed != null) {
+        "Breed originating from ${localBreed.origin ?: "Unspecified origin"}. Has an average life expectancy of ${localBreed.lifeSpan ?: "N/A"}."
+    } else null
+
+    val careRecommendations = localBreed?.temperament?.let { temperamentString ->
+        val temp = temperamentString.lowercase()
+        when {
+            temp.contains("active") || temp.contains("energetic") || temp.contains("playful") ->
+                "Requires high doses of daily exercise, long walks, and interactive toys to channel their energy."
+            temp.contains("docile") || temp.contains("calm") || temp.contains("quiet") ->
+                "Adapts very well to small spaces or apartments. Requires moderate walks and a calm environment."
+            else -> "Requires a balanced diet according to their size, and periodic veterinary visits."
+        }
+    } ?: if (localBreed != null) {
+        "Requires proper nutrition, brushing, and regular veterinary checkups."
+    } else null
+
+    val characteristics = localBreed?.temperament?.let {
+        "Some distinct behavioral characteristics are: $it."
+    }
     return AnimalResponse(
         idAnimal = this.idAnimal ?:0,
         animalName = this.animalName,
@@ -108,6 +129,9 @@ fun Animal.toResponse(): AnimalResponse {
         size           = this.size,
         animalZipcode = this.animalZipcode,
         breedName = this.breed?.breedName,
+        breedGeneralInfo = generalInfo,
+        breedCareRecommendations = careRecommendations,
+        breedRelevantCharacteristics = characteristics,
         photos        = this.photos.map { it.url },
         createdAt = this.publishedAt ?: LocalDateTime.now(),
         animalDescription = this.description,

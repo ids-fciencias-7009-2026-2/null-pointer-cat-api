@@ -1,6 +1,7 @@
 package com.nullpointercats.sys.adopta.animal.services
 
 import com.nullpointercats.sys.adopta.animal.domain.*
+import com.nullpointercats.sys.adopta.animal.entities.BreedEntity
 import com.nullpointercats.sys.adopta.animal.dto.request.AnimalRegisterRequest
 import com.nullpointercats.sys.adopta.animal.dto.request.AnimalUpdateRequest
 import com.nullpointercats.sys.adopta.animal.repositories.*
@@ -8,6 +9,7 @@ import com.nullpointercats.sys.adopta.user.domain.toDomain
 import com.nullpointercats.sys.adopta.user.repositories.UserRepository
 import com.nullpointercats.sys.adopta.user.repositories.toUserEntity
 import com.nullpointercats.sys.adopta.user.services.UserService
+import com.nullpointercats.sys.adopta.animal.services.ExternalPetApiClient
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
@@ -32,6 +34,9 @@ class AnimalService {
     @Autowired
     lateinit var userRepository: UserRepository
 
+    @Autowired
+    lateinit var externalPetApiClient: ExternalPetApiClient
+
 
     val logger = LoggerFactory.getLogger(UserService::class.java)
 
@@ -40,6 +45,27 @@ class AnimalService {
      */
     @Transactional
     fun addNewAnimal(animal : Animal, breedId : Int?): Animal ? {
+        var breedEntity: BreedEntity? = null
+
+        if (breedId != null) {
+            val localBreed = breedRepository.findById(breedId)
+            if (localBreed.isPresent) {
+                breedEntity = localBreed.get()
+            } else {
+                val externalBreeds = externalPetApiClient.fetchBreedsFromExternalApi(animal.species)
+                val matchingExternal = externalBreeds.find { it.id == breedId }
+
+                if (matchingExternal != null) {
+                    val newBreed = BreedEntity(
+                        breedName = matchingExternal.name,
+                        origin = matchingExternal.origin,
+                        temperament = matchingExternal.temperament,
+                        lifeSpan = matchingExternal.lifeSpan
+                    )
+                    breedEntity = breedRepository.save(newBreed)
+                }
+            }
+        }
 
         val userEntityOptional = userRepository.findById(animal.publisher.id.toInt())
         if (userEntityOptional  == null) {
@@ -47,8 +73,9 @@ class AnimalService {
             return null
         }
         val userEntity = userEntityOptional.get()
-        val breedEntity = breedId?.let { breedRepository.findById(it).orElse(null) }
         val animalEntity = animal.toEntity(userEntity, breedEntity)
+        animalEntity.breed = breedEntity
+
         return try {
             val savedEntity = animalRepository.save(animalEntity)
             logger.info("Animal saved with ID: ${savedEntity.idAnimal}")
