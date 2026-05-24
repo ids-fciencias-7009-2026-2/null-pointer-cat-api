@@ -17,7 +17,6 @@ data class AnimalResponse(
     val breedGeneralInfo: String?,
     val breedCareRecommendations: String?,
     val breedRelevantCharacteristics: String?,
-
     val publisherUsername: String,
     val publisherFirstname: String,
     val publisherLastname: String,
