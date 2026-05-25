@@ -11,7 +11,7 @@ data class AnimalResponse(
     val dateOfBirth: LocalDate?,
     val animalZipcode: String,
     val breedName: String?,
-    val animalDescription: String?,
+    val description: String?,
     val photos: List<String>,
     val createdAt: LocalDateTime,
     val breedGeneralInfo: String?,

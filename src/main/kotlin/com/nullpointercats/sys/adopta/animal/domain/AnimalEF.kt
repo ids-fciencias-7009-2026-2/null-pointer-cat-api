@@ -159,7 +159,7 @@ fun Animal.toResponse(): AnimalResponse {
         breedRelevantCharacteristics = characteristics,
         photos        = this.photos.map { it.url },
         createdAt = this.publishedAt ?: LocalDateTime.now(),
-        animalDescription = this.description,
+        description = this.description,
 
         publisherUsername = this.publisher.username,
         publisherFirstname = this.publisher.firstname,
