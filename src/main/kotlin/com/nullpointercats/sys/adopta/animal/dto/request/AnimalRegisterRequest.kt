@@ -4,7 +4,7 @@ import java.time.LocalDate
 import java.time.LocalDateTime
 
 /**
- * DTO representing the incoming rquest from a client
+ * DTO representing the incoming request from a client
  * when attempting to register a new animal in the system.
  */
 data class AnimalRegisterRequest (
@@ -16,7 +16,7 @@ data class AnimalRegisterRequest (
     val animalZipcode: String,
     val publishedAt: LocalDateTime? = LocalDateTime.now(),
 
-    val breedId: Int? = null,
+    val breedId: String? = null,
     val photos: List<PhotoRegisterRequest> = emptyList()
 )
 
